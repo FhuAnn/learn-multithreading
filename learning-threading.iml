@@ -7,6 +7,8 @@
       <sourceFolder url="file://$MODULE_DIR$/02-thread-coordination/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/exercise/join-thread/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/03-performance-optimization/optimize-latency/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/03-performance-optimization/optimize-thoughput/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/04-data-sharing-between-threads/src" isTestSource="false" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
