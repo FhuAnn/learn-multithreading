@@ -10,6 +10,7 @@
       <sourceFolder url="file://$MODULE_DIR$/03-performance-optimization/optimize-thoughput/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/04-data-sharing-between-threads/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/05-concurrency-challenge/race.condition/non.atomic" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/05-concurrency-challenge/locking-strategy-and-deadlock/src" isTestSource="false" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
