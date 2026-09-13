@@ -11,6 +11,8 @@
       <sourceFolder url="file://$MODULE_DIR$/04-data-sharing-between-threads/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/05-concurrency-challenge/race.condition/non.atomic" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/05-concurrency-challenge/locking-strategy-and-deadlock/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/09-thread-models-for-high-performance/blocking-io" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/09-thread-models-for-high-performance/thread-per-task/src" isTestSource="false" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
