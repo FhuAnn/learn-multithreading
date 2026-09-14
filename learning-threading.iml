@@ -13,6 +13,7 @@
       <sourceFolder url="file://$MODULE_DIR$/05-concurrency-challenge/locking-strategy-and-deadlock/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/09-thread-models-for-high-performance/blocking-io" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/09-thread-models-for-high-performance/thread-per-task/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/10-virtual-thread-and-high-performance/virtual-thread" isTestSource="false" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
