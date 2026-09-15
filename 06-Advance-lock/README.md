@@ -500,7 +500,22 @@ ReentrantLock
 └── Fairness
     └── new ReentrantLock(true)
 ```
+## Summary
+- Learned a new type of lock - ReentrantLock
+  - Same functionality and properties as the synchronized lock
+  - Provides more control and advanced features
+    - Query methods for testing lock's internal state
+    - lockInterruptibly()
+    - tryLock()
 
 ## One-Sentence Summary
 
 > `ReentrantLock` is similar to `synchronized`, but more flexible: it supports lock state inspection, fairness, interruptible waiting, and non-blocking lock attempts with `tryLock()`.
+
+-----------------
+## Summary In User Interface Application
+- Learned how to utilize the ReenterantLock's advanced features:
+- Using tryLock():
+  - We avoid blocking the real time thread.
+  - Kept application responsive.
+  - Performed operations atomically.

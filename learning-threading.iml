@@ -14,6 +14,8 @@
       <sourceFolder url="file://$MODULE_DIR$/09-thread-models-for-high-performance/blocking-io" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/09-thread-models-for-high-performance/thread-per-task/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/10-virtual-thread-and-high-performance/virtual-thread" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/06-Advance-lock/financial-assets-dashboard/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/06-Advance-lock/reentrant-read-write-lock-database-implementation/src" isTestSource="false" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
