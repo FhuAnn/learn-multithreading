@@ -1,7 +1,8 @@
 # Virtual Threads — Best Practices
 
 > Summary of the **Virtual Threads Best Practices** lesson.
-
+![img.png](img.png)
+![img_1.png](img_1.png)
 ## 1. Virtual Threads do not make CPU-bound tasks faster
 
 If a task mainly performs CPU computation:
