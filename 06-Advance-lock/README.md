@@ -519,3 +519,4 @@ ReentrantLock
   - We avoid blocking the real time thread.
   - Kept application responsive.
   - Performed operations atomically.
+![img.png](img.png)

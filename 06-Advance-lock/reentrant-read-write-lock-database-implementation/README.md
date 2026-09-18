@@ -1,7 +1,17 @@
 # What we learn in this lecture
 - ReentrantReadWriteLock (Read Lock and Write lock).
 - Practical Use case.
+
+# LockInterruptibly() - Use cases
+- Watchdog for deadlock detection and recovery.
+- Waking ip threads to do clean and close the application.
+
 # ReentrantReadWriteLock - WHy ?
+- Query methods - For testing
+  - getQueuedThreads() - returns a list of threads waiting to acquire a lock.
+  - getOwner() - Returns the thread that currently owns the lock.
+  - isHeldByCurrentThread() - Queries if the lock is held by the current thread.
+  - idLocked() - Queries if the lock is held by any thread.-
 - Race Conditions require
   - Multiple threads sharing a resource.
   - At least one thread modifying the resource.
@@ -10,6 +20,17 @@
   - Lock and allow only one  thread to critical section.
 ![img.png](imgs/img.png)
 
+# Note about tryBlock()
+- Under no circumstances dóe the tryLock() method block.
+- Regardless of the state of the lock, it always returns immediately.
+
+# Trylock()- use cases
+- Realtime applications where suspending a thread on a lock() method is unacceptable.
+- Examples:
+  - Video/Image processing.
+  - High speed/low latency trading systems.
+  - User interface applications.
+  
 # ReentrantReadWriteLock - When to use
 - When read operations are predominant.
 - Or when the read operations are not as fast.

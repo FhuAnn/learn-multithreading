@@ -4,6 +4,9 @@
 ![img_3.png](img_3.png)
 ![img_4.png](img_4.png)
 ![img_5.png](img_5.png)
+
+# Watch practice 
+![img_6.png](img_6.png)
 # Summary
 - Performance benefits of virtual threads for long blocking call.
 - Virtual threads are a perfect choice for IO bound applications.
