@@ -56,3 +56,8 @@
 - Read/ Assignment on all primitive types (except long and double).
 - Read/ Assignment on all references.
 - Read/ Assignment on volatile long and double.
+
+# AtomicX classes
+- Class located in the *java.util.concurrent.atomic package*.
+- Internally uses the Unsafe class which provides access to low level, native methods.
+- Utilize platform specific implementation of atomic operations.
