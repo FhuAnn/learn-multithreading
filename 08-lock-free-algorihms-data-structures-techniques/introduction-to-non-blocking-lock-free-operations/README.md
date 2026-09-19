@@ -5,7 +5,7 @@
 - Introduction to a new group of atomic operations.
 
 # Why learning lock free techniques?
-- As engineers we are alwways faced with a trade off
+- As engineers we are always faced with a trade off
 - For most problems there's more than one solution.
 - The more tools with have the better we can choose the right tool for the job.
 - Being able to choose the right tool for the job is what makes a good engineer.
