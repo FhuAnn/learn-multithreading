@@ -7,7 +7,7 @@ import java.util.concurrent.locks.LockSupport;
 
 public class AtomicReference1 {
     public static void main(String[]args) throws InterruptedException {
-//StandardStack<Integer> stack = new StandardStack<>();
+        //StandardStack<Integer> stack = new StandardStack<>();
         LockFreeStack<Integer> stack = new LockFreeStack<>();
         Random random = new Random();
 
