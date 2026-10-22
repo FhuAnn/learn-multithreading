@@ -3,6 +3,7 @@
 > Summary of the **Virtual Threads Best Practices** lesson.
 ![img.png](img.png)
 ![img_1.png](img_1.png)
+![img_6.png](img_6.png)
 ## 1. Virtual Threads do not make CPU-bound tasks faster
 
 If a task mainly performs CPU computation:
@@ -413,3 +414,14 @@ So these problems still exist:
     deadlocks
     data races
 ```
+![img_9.png](img_9.png)
+![img_10.png](img_10.png)
+----
+![img_4.png](img_4.png)
+-  When we use the VT, we pay only the price of mounting and unmounting the VT on a carrier thread.
+- While the price of mounting and unmounting of VT is much smaller than a context switch, it's still not zero.
+---
+-  The JVM already creates an internal pool of platform threads for us. And that's beacuase platfor are expensive and a limited resource. The JVM tak care of all this complexity. So we can e the simple and intuitive thread pertasks model
+![img_5.png](img_5.png)
+---
+![img_8.png](img_8.png)
