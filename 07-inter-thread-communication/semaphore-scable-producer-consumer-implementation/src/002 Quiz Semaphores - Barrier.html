@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quiz</title>
+  <style>
+    * {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell,
+        "Open Sans", "Helvetica Neue", sans-serif;
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-size: 16px;
+    }
+
+    main {
+      padding-top: 48px;
+    }
+
+    :root {
+      --large-device-width: 850px;
+      --primary-color: #0f172a;
+      --secondary-color: #020617;
+      --primary-text-color: #c7d1dd;
+      --secondary-text-color: #061602;
+      --success-background: hsl(159, 82%, 24%);
+      --success-foreground: hsl(164, 86%, 16%);
+      --success: hsl(160, 84%, 39%);
+      --danger: #ef4444;
+      --warning: #f59e0b;
+      --info-background: hsl(218, 81%, 8%);
+      --info-foreground: hsl(217, 91%, 85%);
+      --border-color: #d1d7dc;
+      --check-box-size: 20px;
+      /* control the size */
+      --check-box-color: var(--info-foreground);
+      /* the active color */
+    }
+
+    body {
+      position: relative;
+      background-color: #020617;
+      color: var(--primary-text-color);
+    }
+
+    #score-stats-container {
+      position: fixed;
+      z-index: 10;
+      top: 0;
+      height: 40px;
+      width: 100%;
+      background-color: var(--info-background);
+
+      padding: 0px 16px;
+      color: var(--info-foreground);
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    #quiz-container {
+      border-radius: 8px;
+      display: flex;
+      gap: 16px;
+      flex-direction: column;
+    }
+
+    /* === Base Styles for both Radio and Checkbox === */
+    input[type="radio"],
+    input[type="checkbox"] {
+        height: var(--check-box-size);
+        aspect-ratio: 1;
+        border: calc(var(--check-box-size) / 8) solid #939393;
+        padding: calc(var(--check-box-size) / 8);
+        background: radial-gradient(farthest-side, var(--check-box-color) 94%, #0000) 50%/0 0 no-repeat content-box;
+        outline-offset: calc(var(--check-box-size) / 10);
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        cursor: pointer;
+        font-size: inherit;
+        transition: 0.3s;
+    }
+
+    input[type="radio"]:checked,
+    input[type="checkbox"]:checked {
+        border-color: var(--check-box-color);
+        background-size: 100% 100%;
+    }
+
+    input[type="radio"]:disabled,
+    input[type="checkbox"]:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+
+    /* === Specific Styles === */
+    input[type="radio"] {
+      border-radius: 50%; /* Makes it a circle */
+    }
+    
+    input[type="checkbox"] {
+        border-radius: 4px; /* Makes it a square */
+    }
+    
+    label {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      padding: 4px 6px;
+      border-radius: 4px;
+    }
+
+    @media (max-width: 767px) {
+
+      input[type="radio"],
+      input[type="checkbox"],
+      label {
+        cursor: default;
+      }
+
+      #quiz-container {
+        margin-left: 8px;
+        margin-right: 8px;
+      }
+    }
+
+    /* PC (Desktop devices) */
+    @media (min-width: 768px) {
+      body {
+        display: flex;
+        justify-content: center;
+      }
+
+      main {
+        max-width: var(--large-device-width);
+      }
+
+      #score-stats-container {
+        max-width: var(--large-device-width);
+      }
+
+      dialog {
+        max-width: var(--large-device-width);
+      }
+    }
+
+    @media print {
+        input[type="radio"],
+        input[type="checkbox"] {
+            background: none !important;
+            border-color: #939393 !important;
+        }
+
+        input[type="radio"]:checked,
+        input[type="checkbox"]:checked {
+            border-color: #939393 !important;
+        }
+    }
+
+    .question-lable {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    button {
+      -webkit-tap-highlight-color: transparent;
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      user-select: none;
+      outline: none;
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+    }
+
+    .button {
+      background-color: var(--success-background);
+      border: none;
+      color: #f4f5f7;
+      opacity: 0.8;
+      font-size: 18px;
+      flex-grow: 1;
+      padding: 8px 16px;
+      border-radius: 8px;
+    }
+
+    .button:hover {
+      opacity: 1;
+    }
+
+    .button:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+
+    .explanation-btn {
+      border: none;
+      color: var(--success);
+      background-color: transparent;
+    }
+
+    .single-question-container {
+      background-color: var(--primary-color);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      padding: 16px;
+      border-radius: 8px;
+    }
+
+    #modal-content {
+      padding: 16px;
+      line-height: 24px;
+    }
+
+    dialog::backdrop {
+      background: rgba(0, 0, 0, 0.5);
+    }
+
+    dialog {
+      position: fixed;
+      border: 1px solid var(--border-color);
+      background-color: var(--primary-color);
+      color: rgb(240, 241, 248);
+      padding: 16px;
+      border-radius: 8px;
+      width: 80vw;
+      max-height: 80vh;
+      overflow: auto;
+      top: 50%;
+      left: 50%;
+      transform: translateX(-50%) translateY(-50%);
+    }
+
+    #close-modal-btn {
+      position: absolute;
+      top: 4px;
+      right: 4px;
+      padding: 2px 8px;
+      border-radius: 2px;
+      border: none;
+      background-color: var(--danger);
+    }
+
+    .correct-answer > label {
+      border: 2px solid var(--success);
+      width: 100%;
+    }
+
+    .incorrect-answer > label {
+      border: 2px solid var(--danger);
+      width: 100%;
+    }
+
+    .options-container {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    #quiz-meta-container {
+      border-radius: 8px;
+      background-color: var(--primary-color);
+      margin-bottom: 12px;
+      padding: 8px;
+    }
+
+    #quiz-title {
+      text-align: center;
+      font-size: 24px;
+      margin-bottom: 8px;
+    }
+
+    #quiz-description {
+      line-height: 1.5;
+      padding: 2px 6px;
+    }
+  </style>
+</head>
+
+<body onload="main()">
+  <main>
+    <section id="quiz-meta-container">
+      <h1 id="quiz-title"></h1>
+      <p id="quiz-description"></p>
+    </section>
+    <section id="score-stats-container">
+      <div id="score-card">
+        Score: <span id="current-score">999</span> of
+        <span id="pass-percent">999%</span>
+      </div>
+      <div>Correct: <span id="correct-answers">999</span></div>
+      <div>Incorrect: <span id="wrong-answers">999</span></div>
+    </section>
+
+    <section id="quiz-container"></section>
+
+    <dialog id="modal" class="modal-container">
+      <div id="modal-content">
+        <p id="modal-text"></p>
+      </div>
+    </dialog>
+  </main>
+
+  <script>
+    const quizData = {"pass_percent": null, "questions": [{"_class": "assessment", "id": 4321820, "assessment_type": "multiple-choice", "prompt": {"question": "<p>In this question, we will design a <strong>Barrier</strong> class.</p><p>When running tasks by multiple threads concurrently,&nbsp; sometimes we would like to coordinate the work to guarantee that some portion of the work is done by all threads before the rest of the work is performed.</p><p>The following task is performed by multiple threads concurrently:</p><pre class=\"prettyprint linenums\">private void task() throws InterruptedException {\n\n  // Performing Part 1\n  System.out.println(Thread.currentThread().getName() \n    + \" part 1 of the work is finished\");\n\n  barrier.waitForOthers();\n\n  //Performing Part2\n  System.out.println(Thread.currentThread().getName() \n    + \" part 2 of the work is finished\");\n}</pre><p><br></p><p>If we have 3 threads executing this task concurrently, we would like the output to look like this:</p><pre class=\"prettyprint linenums\">thread1 part 1 of the work is finished\nthread2 part 1 of the work is finished\nthread3 part 1 of the work is finished\n\nthread2 part 2 of the work is finished\nthread1 part 2 of the work is finished\nthread3 part 2 of the work is finished</pre><p>The order of the execution of each part is not important. But we want to make sure that <strong>all</strong> threads finish <code>part1</code> <strong>before any thread</strong> can go ahead and perform <code>part2</code> </p><p><br></p><p>Here is a proposed solution with some blank spots we need to fill in</p><pre class=\"prettyprint linenums\">public static class Barrier {\n    private final int numberOfWorkers;\n    private final Semaphore semaphore = new Semaphore( //** blank 1 **/);\n    private int counter = //** blank 2 **/;\n    private final Lock lock = new ReentrantLock();\n\n    public Barrier(int numberOfWorkers) {\n        this.numberOfWorkers = numberOfWorkers;\n    }\n\n    public void waitForOthers() throws InterruptedException {\n        lock.lock();\n        boolean isLastWorker = false;\n        try {\n            counter++;\n\n            if (counter == numberOfWorkers) {\n                isLastWorker = true;\n            }\n        } finally {\n            lock.unlock();\n        }\n\n        if (isLastWorker) {\n            semaphore.release(//** blank 3 **/);\n        } else {\n            semaphore.acquire();          \n        }\n    }\n}\n\npublic static class CoordinatedWorkRunner implements Runnable {\n    private final Barrier barrier;\n\n    public CoordinatedWorkRunner(Barrier barrier) {\n        this.barrier = barrier;\n    }\n\n    @Override\n    public void run() {\n        try {\n            task();\n        } catch (InterruptedException e) {\n        }\n    }\n\n    private void task() throws InterruptedException {\n        // Performing Part 1\n        System.out.println(Thread.currentThread().getName() \n                + \" part 1 of the work is finished\");\n\n        barrier.waitForOthers();\n\n        // Performing Part2\n        System.out.println(Thread.currentThread().getName() \n                + \" part 2 of the work is finished\");\n    }\n}</pre><p>To make this solution correct, how should we fill in the <code>/** blank ? **/</code>&nbsp; sections?</p><p><br></p><p>To test your code, you can use this main method:</p><pre class=\"prettyprint linenums\">public static void main(String [] args) throws InterruptedException {\n    int numberOfThreads = 200; //or any number you'd like \n\n    List&lt;Thread&gt; threads = new ArrayList&lt;&gt;();\n\n    Barrier barrier = new Barrier(numberOfThreads);\n    for (int i = 0; i &lt; numberOfThreads; i++) {\n        threads.add(new Thread(new CoordinatedWorkRunner(barrier)));\n    }\n\n    for(Thread thread: threads) {\n        thread.start();\n    }\n}</pre>", "relatedLectureIds": ["11200058"], "feedbacks": ["Almost! Take a concrete example, and count how many threads actually acquire the semaphore.", "That's right! You nailed it. we initialize the semaphore to 0, to make sure every thread that tries to acquire the semaphore gets blocked. And the last thread to get to the barrier, releases the semaphore numberOfWorkers - 1 since \"numberOfWorkers - 1\"  threads are blocked on the semaphore. ", "If we start with the semaphore initialized to numberOfWorkers, every thread that tries to acquire the semaphore will succeed, and the barrier will not work as expected"], "answers": ["<p><code>blank 1</code> :\u00a0<code>0</code></p><p><code>blank 2</code>:\u00a0 <code>0</code></p><p><code>blank 3</code>:\u00a0 <code>numberOfWorkers</code> </p>", "<p><code>blank 1</code> : <code>0</code></p><p><code>blank 2</code>:\u00a0 <code>0</code></p><p><code>blank 3 </code>: <code>numberOfWorkers - 1</code> </p>", "<p><code>blank 1</code> :\u00a0<code>numberOfWorkers</code></p><p><code>blank 2</code>:\u00a0 <code>0</code></p><p><code>blank 3</code>:\u00a0 <code>numberOfWorkers</code> </p>"]}, "correct_response": ["b"], "section": "", "question_plain": "In this question, we will design a Barrier class.When running tasks by multiple threads concurrently,&nbsp; sometimes we would like to coordinate the work to guarantee that some portion of the work is done by all threads before the rest of the work is performed.The following task is performed by multiple threads concurrently:private void task() throws InterruptedException {\n\n  // Performing Part 1\n  System.out.println(Thread.currentThread().getName() \n    + \" part 1 of the work is finished\");\n\n  barrier.waitForOthers();\n\n  //Performing Part2\n  System.out.println(Thread.currentThread().getName() \n    + \" part 2 of the work is finished\");\n}If we have 3 threads executing this task concurrently, we would like the output to look like this:thread1 part 1 of the work is finished\nthread2 part 1 of the work is finished\nthread3 part 1 of the work is finished\n\nthread2 part 2 of the work is finished\nthread1 part 2 of the work is finished\nthread3 part 2 of the work is finishedThe order of the execution of each part is not important. But we want to make sure that all threads finish part1 before any thread can go ahead and perform part2 Here is a proposed solution with some blank spots we need to fill inpublic static class Barrier {\n    private final int numberOfWorkers;\n    private final Semaphore semaphore = new Semaphore( //** blank 1 **/);\n    private int counter = //** blank 2 **/;\n    private final Lock lock = new ReentrantLock();\n\n    public Barrier(int numberOfWorkers) {\n        this.numberOfWorkers = numberOfWorkers;\n    }\n\n    public void waitForOthers() throws InterruptedException {\n        lock.lock();\n        boolean isLastWorker = false;\n        try {\n            counter++;\n\n            if (counter == numberOfWorkers) {\n                isLastWorker = true;\n            }\n        } finally {\n            lock.unlock();\n        }\n\n        if (isLastWorker) {\n            semaphore.release(//** blank 3 **/);\n        } else {\n            semaphore.acquire();          \n        }\n    }\n}\n\npublic static class CoordinatedWorkRunner implements Runnable {\n    private final Barrier barrier;\n\n    public CoordinatedWorkRunner(Barrier barrier) {\n        this.barrier = barrier;\n    }\n\n    @Override\n    public void run() {\n        try {\n            task();\n        } catch (InterruptedException e) {\n        }\n    }\n\n    private void task() throws InterruptedException {\n        // Performing Part 1\n        System.out.println(Thread.currentThread().getName() \n                + \" part 1 of the work is finished\");\n\n        barrier.waitForOthers();\n\n        // Performing Part2\n        System.out.println(Thread.currentThread().getName() \n                + \" part 2 of the work is finished\");\n    }\n}To make this solution correct, how should we fill in the /** blank ? **/&nbsp; sections?To test your code, you can use this main method:public static void main(String [] args) throws InterruptedException {\n    int numberOfThreads = 200; //or any number you'd like \n\n    List&lt;Thread&gt; threads = new ArrayList&lt;&gt;();\n\n    Barrier barrier = new Barrier(numberOfThreads);\n    for (int i = 0; i &lt; numberOfThreads; i++) {\n        threads.add(new Thread(new CoordinatedWorkRunner(barrier)));\n    }\n\n    for(Thread thread: threads) {\n        thread.start();\n    }\n}", "related_lectures": [{"_class": "lecture", "id": 11200058, "title": "Semaphore - Scalable Producer Consumer implementation", "created": "2018-07-27T03:44:05Z", "is_published": true, "asset": {"_class": "asset", "id": 17127542, "asset_type": "Video", "title": "Lecture 16.mp4", "created": "2019-03-15T05:04:31Z"}, "object_index": 26, "url": "/course/java-multithreading-concurrency-performance-optimization/learn/lecture/11200058"}]}]};
+
+     let correct = new Set();
+    let incorrect = new Set();
+    let totalNumberOfQuestions = 0;
+    const quizTitle = quizData.quiz_title || "Quiz";
+    const quizDescription = quizData.quiz_description || "Please answer the questions below.";
+    const questionData = quizData.questions;
+    const passPercent = quizData.pass_percent;
+    const modalTextElement = document.getElementById("modal-text");
+    const quizContainerElement = document.getElementById("quiz-container");
+    const dialog = document.querySelector("dialog");
+    const closeButton = document.getElementById("close-modal-btn");
+    const quizTitleElement = document.getElementById("quiz-title");
+    const quizDescriptionElement = document.getElementById("quiz-description");
+
+    function main() {
+      // update quiz meta data
+      document.title = quizTitle;
+      quizTitleElement.innerHTML = quizTitle;
+      quizDescriptionElement.innerHTML = quizDescription;
+
+      const passPercentElement = document.getElementById("pass-percent");
+      passPercentElement.innerHTML = passPercent ? `${passPercent}%` : "N/A";
+      totalNumberOfQuestions = questionData.length;
+      
+      if(closeButton) {
+          closeButton.addEventListener("click", () => dialog.close());
+      }
+
+      // shuffle the questionData to randomize the order
+      for (let i = questionData.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [questionData[i], questionData[j]] = [questionData[j], questionData[i]];
+      }
+
+      let formattedQuestions = questionData.map(formatSingleQuestionData);
+      updateScore();
+      // display the formattedQuestions
+      formattedQuestions.forEach((question, idx) => {
+        renderSingleQuestion(question, idx + 1);
+      });
+    }
+
+    /**
+     * Formats the raw question data into a more usable structure.
+     */
+    function formatSingleQuestionData(singleQuizData = null) {
+        const { prompt, correct_response, id, assessment_type } = singleQuizData;
+        
+        const answers = prompt.answers || [];
+        // Create a detailed answer object including correctness
+        const formattedAnswers = answers.map((answerText, index) => {
+            const letter = String.fromCharCode(97 + index); // a, b, c...
+            const isCorrect = correct_response.includes(letter);
+            return {
+                text: answerText,
+                isCorrect: isCorrect
+            };
+        });
+
+        return {
+            id: id,
+            assessment_type: assessment_type,
+            question: prompt.question,
+            answers: formattedAnswers, // Use the new formatted answers
+            explanation: prompt?.explanation || "",
+            feedbacks: prompt.feedbacks
+        };
+    }
+
+    /**
+     * Renders a single question.
+     */
+    const renderSingleQuestion = (singleQuestionData = {}, rootIndex = 1) => {
+        const { id, explanation, answers, question, feedbacks, assessment_type } = singleQuestionData;
+
+        // shuffle the answers to randomize their order
+        // for (let i = answers.length - 1; i > 0; i--) {
+        //     const j = Math.floor(Math.random() * (i + 1));
+        //     [answers[i], answers[j]] = [answers[j], answers[i]];
+        // }
+        
+        const inputType = assessment_type === 'multi-select' ? 'checkbox' : 'radio';
+        const inputName = `answer_${id}`; // Unique name for each question group
+
+        const optionsHTML = answers
+            .map((option, index) => {
+                const optionId = `${id}_${index}`;
+                return `
+                <div class="question-lable">
+                    <input type="${inputType}" id="${optionId}" name="${inputName}" value="${option.text}" data-is-correct="${option.isCorrect}" />
+                    <label for="${optionId}">${option.text}</label>
+                </div>
+                `;
+            })
+            .join("");
+
+        const container = document.createElement("div");
+        container.innerHTML = `
+            <form data-question-id="${id}" class="single-question-container" onsubmit="submitButtonListener(event)">
+                <div style="display: flex;justify-content: space-between;">
+                    <p style="font-weight: 600">Question ${rootIndex}:</p>
+                    <button type="button" onclick="renderExplanation(event)" data-feedbacks='${JSON.stringify(feedbacks)}' data-explanation="${explanation}" class="explanation-btn">View Explanation</button>
+                </div>
+                <p style="margin-bottom: 8px;line-height: 1.5">${question}</p>
+                <div class="options-container">
+                    ${optionsHTML}
+                </div>
+                <div style="display: flex; gap: 8px;">
+                    <button type="submit" class="button submit-btn">Submit</button>
+                </div>
+            </form>
+        `;
+        quizContainerElement.appendChild(container);
+    };
+
+    /**
+     * Updates the score board.
+     */
+    function updateScore() {
+        const currentPercentageElement = document.getElementById("current-score");
+        const correctAnswerElement = document.getElementById("correct-answers");
+        const wrongAnswerElement = document.getElementById("wrong-answers");
+        correctAnswerElement.innerHTML = correct.size;
+        wrongAnswerElement.innerHTML = incorrect.size;
+        if (totalNumberOfQuestions > 0) {
+            const score = Number((correct.size / totalNumberOfQuestions) * 100).toFixed(0);
+            currentPercentageElement.innerHTML = score;
+        }
+    }
+
+    /**
+    * Compares two sets for equality.
+    */
+    function setsAreEqual(setA, setB) {
+        if (setA.size !== setB.size) {
+            return false;
+        }
+        for (const item of setA) {
+            if (!setB.has(item)) {
+            return false;
+            }
+        }
+        return true;
+    }
+
+
+    /**
+     * Handles the form submission for a single question.
+     */
+    const submitButtonListener = (e) => {
+        e.preventDefault();
+        const form = e.target;
+        const questionId = form.dataset.questionId;
+        const inputs = form.querySelectorAll('input[type="radio"], input[type="checkbox"]');
+        
+        const userSelectedValues = new Set();
+        const actualCorrectValues = new Set();
+        let hasSelection = false;
+
+        inputs.forEach(input => {
+            if (input.checked) {
+                userSelectedValues.add(input.value);
+                hasSelection = true;
+            }
+            if (input.dataset.isCorrect === 'true') {
+                actualCorrectValues.add(input.value);
+            }
+        });
+
+        if (!hasSelection) {
+            alert("Please select an answer!");
+            return;
+        }
+
+        const isFullyCorrect = setsAreEqual(userSelectedValues, actualCorrectValues);
+
+        if (isFullyCorrect) {
+            correct.add(questionId);
+            incorrect.delete(questionId);
+        } else {
+            incorrect.add(questionId);
+            correct.delete(questionId);
+        }
+        
+        updateScore();
+
+        // Apply visual feedback and disable the form
+        form.querySelectorAll(".question-lable").forEach(labelContainer => {
+            const input = labelContainer.querySelector('input');
+            labelContainer.classList.remove("correct-answer", "incorrect-answer");
+
+            // Highlight all correct answers
+            if (input.dataset.isCorrect === 'true') {
+                labelContainer.classList.add("correct-answer");
+            } 
+            // Highlight user's incorrect selections
+            else if (input.checked && input.dataset.isCorrect === 'false') {
+                labelContainer.classList.add("incorrect-answer");
+            }
+        });
+
+      
+    };
+
+    /**
+     * Renders the explanation in a modal dialog.
+     */
+    function renderExplanation(ev) {
+        modalTextElement.innerHTML = '';
+        const explanation = ev.target.dataset?.explanation;
+        const feedbacksString = ev.target.dataset?.feedbacks;
+        let contentFound = false;
+
+        if (explanation && explanation.trim() !== "") {
+            modalTextElement.innerHTML += explanation;
+            contentFound = true;
+        }
+
+        if (feedbacksString) {
+            try {
+                const feedbacks = JSON.parse(feedbacksString);
+                feedbacks.forEach(feedback => {
+                    if (feedback && feedback.trim() !== "") {
+                        modalTextElement.innerHTML += feedback;
+                        contentFound = true;
+                    }
+                });
+            } catch (e) {
+                console.error("Error parsing feedbacks JSON:", e);
+            }
+        }
+
+        if (!contentFound) {
+            modalTextElement.innerHTML = "<p>No explanation found for this question.</p>";
+        }
+
+        dialog.showModal();
+        dialog.addEventListener("click", (event) => {
+            if (event.target === dialog) {
+                dialog.close();
+            }
+        });
+    }
+  </script>
+</body>
+
+</html>

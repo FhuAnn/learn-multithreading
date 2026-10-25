@@ -17,6 +17,7 @@
       <sourceFolder url="file://$MODULE_DIR$/06-Advance-lock/financial-assets-dashboard/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/06-Advance-lock/reentrant-read-write-lock-database-implementation/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/08-lock-free-algorihms-data-structures-techniques/atomic-references-compare-and-set/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/07-inter-thread-communication/semaphore-scable-producer-consumer-implementation/src" isTestSource="false" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
