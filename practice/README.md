@@ -1,0 +1,1 @@
+- We can only achieve parraleism with multiple cores, but by multasking, the OS can achieve concurrency using jusst one core by the means of multithreading.

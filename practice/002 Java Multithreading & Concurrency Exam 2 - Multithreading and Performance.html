@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quiz</title>
+
+  <style>
+    body {
+      font-family: sf pro text, -apple-system, BlinkMacSystemFont, Roboto,
+        segoe ui, Helvetica, Arial, sans-serif, apple color emoji,
+        segoe ui emoji, segoe ui symbol;
+      font-weight: 400;
+      line-height: 22.4px;
+      font-size: 16px;
+    }
+
+    p,
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    ul,
+    ol {
+      font-size: 16px;
+      font-weight: 400;
+    }
+
+    ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      max-width: none;
+    }
+
+    code {
+      background-color: #fff;
+      border: 1px solid #d1d7dc;
+      color: #b4690e;
+      font-size: 90%;
+      padding: 0.2rem 0.4rem;
+    }
+
+    .quiz-content {
+      padding: 2.4rem;
+      word-break: break-word;
+      max-width: 86rem;
+      margin: 0 auto;
+    }
+
+    .quiz-container {
+      margin: 0 auto;
+      max-width: 84rem;
+      padding: 0;
+    }
+
+    .question {
+      margin-bottom: 5rem;
+    }
+
+    .question span {
+      font-size: 24px;
+      font-weight: 700;
+    }
+
+    .question-prompt {
+      margin-top: 0.8rem;
+      font-weight: 700;
+    }
+
+    .question-answer {
+      margin-top: 1.6rem;
+      padding-left: 0;
+      box-sizing: border-box;
+    }
+
+    .question-answer label {
+      max-width: 80rem;
+      position: relative;
+      cursor: pointer;
+      display: flex;
+      min-width: 18rem;
+      border: solid #1c1d1f 2px;
+    }
+
+    .question-answer div {
+      padding: 0.5rem;
+      width: 100%;
+    }
+
+    .question-answer div:hover {
+      background-color: #f5f5f5;
+    }
+
+    /* .question-answer input {
+      display: none;
+    } */
+
+    .question-answer span {
+      width: 1rem;
+      height: 1rem;
+      margin-right: 1.6rem;
+      top: 0;
+      border-radius: 50%;
+      display: inline-block;
+      flex-shrink: 0;
+      border: 0.2rem solid #1c1d1f;
+      position: relative;
+    }
+
+    .selected {
+      background: #1c1d1f;
+      box-shadow: 0 0 0 0.4rem #fff inset;
+    }
+
+    .score {
+      position: fixed;
+      background-color: #b4690e;
+      padding: 10px;
+      color: white;
+    }
+  </style>
+</head>
+
+<body onload="main()">
+  <div id="score" class="score">
+    <span>Score: N/A of N/A</span>
+  </div>
+  <div id="quiz-container" class="quiz-content"></div>
+
+  <script>
+    const quizData = {"pass_percent": 70, "questions": [{"_class": "assessment", "id": 31383342, "assessment_type": "multi-select", "prompt": {"feedbacks": ["", "", "", "", ""], "relatedLectureIds": "", "answers": ["<p><strong>Option 1</strong> is better than <strong>Option 2</strong>, and <strong>Option 2</strong> is better than <strong>Option 3</strong> since the former are more responsive than the latter.</p>", "<p><strong>Option 1</strong>, <strong>Option 2</strong> and <strong>Option 3</strong> are equally correct and accurate.</p>", "<p><strong>Option 3</strong> is more accurate than <strong>Option 2</strong>, and <strong>Option 2</strong> is more accurate than <strong>Option 1.</strong></p>", "<p><strong>Option 3</strong> is more CPU efficient than <strong>Option 2</strong>. And <strong>Option 2</strong> is more CPU efficient than <strong>Option 1.</strong></p>", "<p><strong>Option 1</strong> and <strong>Option 2</strong> are equally CPU efficient, and are both more efficient than <strong>Option 3.</strong></p>"], "question": "<p>We have the following 3 implementations of a method that waits for <strong>2000ms.</strong></p><p><strong>Option 1:</strong></p><pre class=\"prettyprint linenums\">public void waitMethod() throws InterruptedException  {\n    for (int i = 0; i &lt; 2000; i++) {\n        Thread.sleep(1);\n    }\n}</pre><p><strong>Option 2:</strong></p><pre class=\"prettyprint linenums\">public void waitMethod() throws InterruptedException {\n    for (int i = 0; i &lt; 20; i++) {\n        Thread.sleep(100);\n    }\n}\n</pre><p><strong>Option 3:</strong></p><pre class=\"prettyprint linenums\">public void waitMethod() throws InterruptedException {\n    Thread.sleep(2000);\n}</pre><p>Select all the correct statements.</p>", "explanation": "<p>Every time we put a thread to sleep it is stored away and removed from the CPU by the OS, the OS will try its best to schedule it as soon as it becomes runnable but there is no guarantee. The more context switches the thread is involved in, the higher the error in timing. Therefore <strong>Option 3</strong> is the best for accuracy. It also wakes up less frequently and therefore wastes fewer CPU cycles.</p>"}, "correct_response": ["c", "d"], "section": "", "question_plain": "We have the following 3 implementations of a method that waits for 2000ms.Option 1:public void waitMethod() throws InterruptedException  {\n    for (int i = 0; i &lt; 2000; i++) {\n        Thread.sleep(1);\n    }\n}Option 2:public void waitMethod() throws InterruptedException {\n    for (int i = 0; i &lt; 20; i++) {\n        Thread.sleep(100);\n    }\n}\nOption 3:public void waitMethod() throws InterruptedException {\n    Thread.sleep(2000);\n}Select all the correct statements.", "related_lectures": []}, {"_class": "assessment", "id": 31383344, "assessment_type": "multi-select", "prompt": {"feedbacks": ["", "", "", "", ""], "relatedLectureIds": "", "answers": ["<p>We can achieve parallel execution using multiple threads in a single process.</p>", "<p>We can achieve concurrency using multiple threads.</p>", "<p>We can achieve parallel execution using multiple processes.</p>", "<p>We can achieve concurrency using multiple processes.</p>", "<p>We can achieve neither parallel execution nor concurrency.</p>"], "question": "<p>We have a (low cost) computer with a <strong>single</strong> core. <br>Which of the following is true?</p><p>(select all the correct statements)</p>", "explanation": "<p>We can only achieve parallelism with multiple cores, but by multitasking, the OS can achieve concurrency using just one core by the means of multithreading.</p>"}, "correct_response": ["b", "d"], "section": "", "question_plain": "We have a (low cost) computer with a single core. Which of the following is true?(select all the correct statements)", "related_lectures": []}, {"_class": "assessment", "id": 31383346, "assessment_type": "multi-select", "prompt": {"feedbacks": ["", "", "", "", "", ""], "relatedLectureIds": "", "answers": ["<p>Latency</p>", "<p>Graceful degradation </p>", "<p>Throughput</p>", "<p>Response time</p>", "<p>Short tail latency (narrow latency distribution)</p>", "<p>Instructions per cycle</p>"], "question": "<p>Which of the following is a measure for <em>performance</em>?</p><p>Select all the correct answers.</p>", "explanation": "<p>All of those are correct and many more. The performance of an application is a metric that depends on the goals of the program as well as the <a href=\"https://en.wikipedia.org/wiki/Service-level_agreement\">service level agreement</a> to the clients.</p>"}, "correct_response": ["a", "b", "c", "d", "e", "f"], "section": "", "question_plain": "Which of the following is a measure for performance?Select all the correct answers.", "related_lectures": []}, {"_class": "assessment", "id": 31383348, "assessment_type": "multiple-choice", "prompt": {"feedbacks": ["", "", ""], "relatedLectureIds": "", "answers": ["<p>The time it takes to process a user\u2019s request</p>", "<p>The amount of data passing through a program </p>", "<p>Amount of work performed in a unit of time </p>"], "question": "<p>What is the definition of <em>throughout</em>?</p>"}, "correct_response": ["c"], "section": "", "question_plain": "What is the definition of throughout?", "related_lectures": []}, {"_class": "assessment", "id": 31383350, "assessment_type": "multiple-choice", "prompt": {"feedbacks": ["", "", ""], "relatedLectureIds": "", "answers": ["<p>Moving the application as is to a 16 core computer will definitely improve the performance of the application</p>", "<p>Moving the application as is to a 16 core computer will not make any difference on the performance of the application</p>", "<p>Moving the application as is to a 16 core computer will make the performance of the application worse</p>"], "question": "<p>We have an application that performs its work using <strong>8 threads</strong>. Currently it is running on an <strong>8 core</strong> machine with virtually nothing else running on that machine. We want to improve the performance of the application by moving it to a <strong>16 core</strong> machine.</p><p>Select the correct statement.</p>", "explanation": "<p>Just moving this application to a computer with more cores will not improve its performance. Further optimizations will have to be done, one of which may include breaking the application's workload into more threads.</p>"}, "correct_response": ["b"], "section": "", "question_plain": "We have an application that performs its work using 8 threads. Currently it is running on an 8 core machine with virtually nothing else running on that machine. We want to improve the performance of the application by moving it to a 16 core machine.Select the correct statement.", "related_lectures": []}, {"_class": "assessment", "id": 31383352, "assessment_type": "multiple-choice", "prompt": {"feedbacks": ["", "", ""], "relatedLectureIds": "", "answers": ["<p>Yes any code can be sped up by running on multiple threads</p>", "<p>Yes any code can be sped up by running on multiple threads&nbsp;but only if we also have enough cores</p>", "<p>Some code can be sped up with multithreading, but some cannot</p>"], "question": "<p>True or false:</p><p>\u201cWe can speed up any code using multithreading.\u201d</p>", "explanation": "<p>Some inherently sequential code cannot be sped up with multithreading. Only logic that can be broken into parallel parts has the potential of improved latency using multithreading.</p>"}, "correct_response": ["c"], "section": "", "question_plain": "True or false:\u201cWe can speed up any code using multithreading.\u201d", "related_lectures": []}, {"_class": "assessment", "id": 31383354, "assessment_type": "multiple-choice", "prompt": {"feedbacks": ["", "", ""], "relatedLectureIds": "", "answers": ["<p>Computer A</p>", "<p>Computer B</p>", "<p>Both have the same performance</p>"], "question": "<p>We are tasked to choose between two different computers to run a mission critical application.</p><p>- <strong>Computer A </strong>has 16 physical cores (no hyper-threading)</p><p>- <strong>Computer B </strong>has 16 virtual cores (8 physical cores with hyper-threading enabled, 2 threads per physical core)</p><p>All the rest of the parameters are the same.</p><p>Which computer can provide us with better performance for our multithreaded application?</p>", "explanation": "<p>More information on hyper-threading and virtual cores can be found <a href=\"https://www.intel.com/content/www/us/en/gaming/resources/hyper-threading.html\">here</a>. </p>"}, "correct_response": ["a"], "section": "", "question_plain": "We are tasked to choose between two different computers to run a mission critical application.- Computer A has 16 physical cores (no hyper-threading)- Computer B has 16 virtual cores (8 physical cores with hyper-threading enabled, 2 threads per physical core)All the rest of the parameters are the same.Which computer can provide us with better performance for our multithreaded application?", "related_lectures": []}, {"_class": "assessment", "id": 31383376, "assessment_type": "multiple-choice", "prompt": {"feedbacks": ["", "", "", ""], "relatedLectureIds": "", "answers": ["<p>A situation where data is lost by an application because the OS is too busy managing its resources.</p>", "<p>A situation when the OS is spending more time managing resources than allowing the application threads to run their code.</p>", "<p>A situation when the OS allocates more threads than is allowed.</p>", "<p>A situation when the CPU caches cannot keep up with the amount of data they need to store.</p>"], "question": "<p>What does <strong><em>Thrashing </em></strong>mean in the context of computer science?</p>", "explanation": "<p>Typically thrashing is associated with exhausting the physical memory due to virtual memory overuse, which leads to a high number of page faults. This can happen if we run too many processes, allocate too many threads, or allocate too much memory.</p>"}, "correct_response": ["b"], "section": "", "question_plain": "What does Thrashing mean in the context of computer science?", "related_lectures": []}, {"_class": "assessment", "id": 31383374, "assessment_type": "multiple-choice", "prompt": {"feedbacks": ["", "", "", ""], "relatedLectureIds": "", "answers": ["<p>3200 tasks/second</p>", "<p>2000 tasks/second</p>", "<p>32 tasks/second</p>", "<p>32 tasks</p>"], "question": "<p>Our application receives no more than <strong>2000 tasks/second</strong>.</p><p>Each task takes <strong>10ms</strong> to complete.</p><p>We have <strong>32 physical cores</strong> in our computer.</p><p>What is the best <strong>throughout</strong> we can achieve if we use multithreading to process the tasks?</p>", "explanation": "<p>Our application throughput cannot exceed the input rate of tasks. Therefore its maximum throughput is 2000 tasks/second.</p>"}, "correct_response": ["b"], "section": "", "question_plain": "Our application receives no more than 2000 tasks/second.Each task takes 10ms to complete.We have 32 physical cores in our computer.What is the best throughout we can achieve if we use multithreading to process the tasks?", "related_lectures": []}, {"_class": "assessment", "id": 31383372, "assessment_type": "multiple-choice", "prompt": {"feedbacks": ["", "", "", "", ""], "relatedLectureIds": "", "answers": ["<p>10 tasks/second</p>", "<p>3200 tasks/second</p>", "<p>1600 tasks/second</p>", "<p>16 tasks/second</p>", "<p>1600 tasks</p>"], "question": "<p>Our application receives a continuous stream of tasks. Each task takes <strong>10ms</strong> to complete.</p><p>We have <strong>16 physical cores </strong>in our computer.</p><p>What is the best <strong>throughout</strong> we can achieve if we use multithreading to process the tasks?</p>", "explanation": "<p>The computation is: If each task takes 10ms to complete, then a single thread can complete 1/(0.1) = 100 tasks / second. Since we have 16 cores, we can split our tasks among 16 threads and run them in parallel, which will give us a maximum throughput of 16 * 100 tasks / second.</p>"}, "correct_response": ["c"], "section": "", "question_plain": "Our application receives a continuous stream of tasks. Each task takes 10ms to complete.We have 16 physical cores in our computer.What is the best throughout we can achieve if we use multithreading to process the tasks?", "related_lectures": []}, {"_class": "assessment", "id": 31383370, "assessment_type": "multi-select", "prompt": {"feedbacks": ["", "", "", "", "", "", ""], "relatedLectureIds": "", "answers": ["<p><code>ForkJoinPool</code></p>", "<p><code>ScheduledThreadPoolExecutor</code> </p>", "<p><code>Runnable</code> </p>", "<p><code>Callable</code> </p>", "<p><code>ThreadPoolExecutor</code> </p>", "<p><code>Thread</code> </p>", "<p><code>Future</code> </p>"], "question": "<p>Which of the following is a thread pool implementation class?</p><p>Select all that applies.</p>", "explanation": "<p><a href=\"https://docs.oracle.com/javase/7/docs/api/java/lang/Runnable.html\">Runnable</a> is an interface that allows us to pass code to be executed on another thread or in a thread pool.</p><p><a href=\"https://docs.oracle.com/javase/7/docs/api/java/util/concurrent/Callable.html\">Callable</a> is an interface and is similar to Runnable but allows us to execute code that returns a result.</p><p><a href=\"https://docs.oracle.com/javase/7/docs/api/java/util/concurrent/Future.html\">Future</a> is also just an interface and is a way to retrieve a result from an asynchronous execution by another thread.</p><p><a href=\"https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Thread.html\">Thread</a> is JVM's API for creating individual threads but is not a thread pool.</p><p><strong>The thread pool implementations are:</strong></p><p><a href=\"https://docs.oracle.com/javase/7/docs/api/java/util/concurrent/ThreadPoolExecutor.html\">ThreadPoolExecutor</a> - A general purpose thread pool implementation.</p><p><a href=\"https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/ForkJoinPool.html\">ForkJoinPool</a> - A simple thread pool implementation that enables threads to \"steal\" tasks from other busy threads.</p><p><a href=\"https://docs.oracle.com/javase/9/docs/api/java/util/concurrent/ScheduledThreadPoolExecutor.html\">ScheduledThreadPoolExecutor</a> - Allows scheduling tasks periodically or in the future by executing them on a separate thread pool.</p>"}, "correct_response": ["a", "b", "e"], "section": "", "question_plain": "Which of the following is a thread pool implementation class?Select all that applies.", "related_lectures": []}, {"_class": "assessment", "id": 31383368, "assessment_type": "multi-select", "prompt": {"feedbacks": ["", "", "", "", ""], "relatedLectureIds": "", "answers": ["<p>If T = 16, we always get a performance speed up of 16x comparing to the performance if T = 1 regardless of the values of m and n</p>", "<p>If T = 16, we can get a performance speed up of <strong>up to</strong> 16x comparing to the performance if T = 1</p>", "<p>For <strong>certain values</strong> of m and n, the performance of our program can be better for T = 32 than T = 16.</p>", "<p>For <strong>certain values</strong> of m and n, the performance of our program can be better for T = 8 than T = 2.</p>", "<p>For <strong>certain values</strong> of m and n, the performance of our program can be better for T = 1 than T = 16.</p>"], "question": "<p>We have an image processing program that improves the contrast of an input image by applying a filter on each pixel of the image.</p><p>In an attempt to optimize the performance of our application we measure the time it takes to apply the filter on different images of different sizes. </p><p>We process the image first using a single thread to get a baseline, and then try increasing the number of threads and process the image by applying the filter on different portions of the image in parallel.</p><p>We run this program on a computer with <strong>16 cores</strong>.</p><p>What can we say about our program\u2019s execution on an image of size <strong>m x n</strong>, and a <strong>number of threads T</strong>?</p><p>Select all that applies:</p>", "explanation": "<p>With small images where the values of m and n are small, we won\u2019t see a lot of benefit in multithreading. In fact we may even see a performance degradation when using multiple threads due to the overhead of splitting the image into multiple portions and scheduling them to be processed on multiple threads. The bigger the image is, the higher the benefit in processing the image using multiple threads. However we will not see additional improvement of performance with more threads and cores.</p>"}, "correct_response": ["b", "d", "e"], "section": "", "question_plain": "We have an image processing program that improves the contrast of an input image by applying a filter on each pixel of the image.In an attempt to optimize the performance of our application we measure the time it takes to apply the filter on different images of different sizes. We process the image first using a single thread to get a baseline, and then try increasing the number of threads and process the image by applying the filter on different portions of the image in parallel.We run this program on a computer with 16 cores.What can we say about our program\u2019s execution on an image of size m x n, and a number of threads T?Select all that applies:", "related_lectures": []}, {"_class": "assessment", "id": 31383366, "assessment_type": "multiple-choice", "prompt": {"feedbacks": ["", "", "", ""], "relatedLectureIds": "", "answers": ["<p>5</p>", "<p>8</p>", "<p>100</p>", "<p>There is no \u201coptimal\u201d number of threads when there are blocking calls, especially given that we know only the average for the blocking call latency. The peak latency might be much longer for certain requests.</p>"], "question": "<p>We have a web server, where each request is served by a thread in our thread pool.</p><p>As part of processing a request, our code makes a request for an external database. That a request is a blocking call that takes an <strong>average</strong> of 80 ms (sometimes less, sometimes more).</p><p>We know that the rest of the logic involved in processing the request involves only computations and takes no longer than 20 ms.</p><p>If we have 8 cores in our computer, what is the <strong>optimal</strong> number of threads in our thread pool?</p>", "explanation": "<p>When there are blocking calls, we can never find the \"optimal\"&nbsp;number of threads. We can only calculate either an average number of threads or an upper bound.</p>"}, "correct_response": ["d"], "section": "", "question_plain": "We have a web server, where each request is served by a thread in our thread pool.As part of processing a request, our code makes a request for an external database. That a request is a blocking call that takes an average of 80 ms (sometimes less, sometimes more).We know that the rest of the logic involved in processing the request involves only computations and takes no longer than 20 ms.If we have 8 cores in our computer, what is the optimal number of threads in our thread pool?", "related_lectures": []}, {"_class": "assessment", "id": 31383364, "assessment_type": "multi-select", "prompt": {"feedbacks": ["", "", "", "", ""], "relatedLectureIds": "", "answers": ["<p>A thread pool uses less memory</p>", "<p>A thread pool minimizes the time overhead of creating new threads</p>", "<p>A thread pool minimizes the time between starting the thread and the OS scheduling that thread to run</p>", "<p>A thread pool already comes with a thread safe queue where tasks can be stored before being executed by one of the threads, and we don\u2019t need to implement one on our own</p>", "<p>Thread pools maintain special threads that provide higher performance than the threads we create ourselves</p>"], "question": "<p>What are the advantages of maintaining a thread pool, over allocating threads on demand and terminating them when not needed?</p>"}, "correct_response": ["b", "c", "d"], "section": "", "question_plain": "What are the advantages of maintaining a thread pool, over allocating threads on demand and terminating them when not needed?", "related_lectures": []}, {"_class": "assessment", "id": 31383362, "assessment_type": "multiple-choice", "prompt": {"feedbacks": ["", "", "", ""], "relatedLectureIds": "", "answers": ["<p>1</p>", "<p>8</p>", "<p>100</p>", "<p>The number of threads in the pool has no effect on the latency of serving a request</p>"], "question": "<p>We built a simple web server using Java. The web server simply responds to HTTP requests to load HTML, CSS and JavaScript assets for different web pages. </p><p><strong>All the data is preloaded from the disk to the application\u2019s memory. </strong></p><p>We plan to run a single instance of our web server on an <strong>8 core computer</strong>. All the requests are served by a pool of threads.</p><p>Parsing the request, and building the response object takes only a few milliseconds. </p><p><strong>Under high traffic, </strong>which is the best number of threads in the thread pool for <strong>lowest</strong> <strong>latency</strong>? </p>", "explanation": "<p>Under high traffic we may get to a point where all the threads are already busy serving previous requests and there is no thread to serve a new request. If there is no thread to serve a request, the request will stay in the queue which will add to the overall latency.</p><p>To mitigate that, we need to have enough threads in the pool to take full advantage of all our cores. More threads than cores will not give us any additional benefit and will actually cause more context switches.</p><p>Therefore the best number of threads in this case is as many as cores.</p>"}, "correct_response": ["b"], "section": "", "question_plain": "We built a simple web server using Java. The web server simply responds to HTTP requests to load HTML, CSS and JavaScript assets for different web pages. All the data is preloaded from the disk to the application\u2019s memory. We plan to run a single instance of our web server on an 8 core computer. All the requests are served by a pool of threads.Parsing the request, and building the response object takes only a few milliseconds. Under high traffic, which is the best number of threads in the thread pool for lowest latency?", "related_lectures": []}, {"_class": "assessment", "id": 31383360, "assessment_type": "multiple-choice", "prompt": {"feedbacks": ["", "", "", ""], "relatedLectureIds": "", "answers": ["<p>1</p>", "<p>10</p>", "<p>100</p>", "<p>The number of the threads in the pool does not affect the latency of serving a request </p>"], "question": "<p>We built a simple web server using Java. The web server simply responds to HTTP requests to load HTML, CSS and JavaScript assets for different web pages. </p><p><strong>All the data is preloaded from the disk to the application\u2019s memory. </strong></p><p>We plan to run a single instance of our web server on an <strong>8 core computer</strong>. All the requests are served by a pool of threads.</p><p>Parsing the request and building the response object takes only a few milliseconds.</p><p>The traffic is low.</p><p>Which is the best number of threads in the thread pool for <strong>lowest</strong> <strong>latency</strong>? </p>", "explanation": "<p>Under normal, average load, once a request is served by a thread in the pool, the execution of the request is sequential, so the latency would not be effected by the number of threads in the pool. </p>"}, "correct_response": ["d"], "section": "", "question_plain": "We built a simple web server using Java. The web server simply responds to HTTP requests to load HTML, CSS and JavaScript assets for different web pages. All the data is preloaded from the disk to the application\u2019s memory. We plan to run a single instance of our web server on an 8 core computer. All the requests are served by a pool of threads.Parsing the request and building the response object takes only a few milliseconds.The traffic is low.Which is the best number of threads in the thread pool for lowest latency?", "related_lectures": []}, {"_class": "assessment", "id": 31383358, "assessment_type": "multiple-choice", "prompt": {"feedbacks": ["", "", "", "", ""], "relatedLectureIds": "", "answers": ["<p>1</p>", "<p>3</p>", "<p>8</p>", "<p>17</p>", "<p>100</p>"], "question": "<p>We built a simple web server using Java. The web server simply responds to HTTP requests to load HTML, CSS and JavaScript assets for different web pages.</p><p><strong>All the data is preloaded from the disk to the application\u2019s memory. </strong></p><p>We plan to run a single instance of our web server on an <strong>8 core computer</strong>. All the requests are served by a pool of threads.</p><p>Which is the best number of threads in the thread pool for highest <strong>throughout</strong>?</p>", "explanation": "<p>Since each request requires only computations and does not block the thread, the optimal number of threads is as many as cores, which in this case is 8.</p>"}, "correct_response": ["c"], "section": "", "question_plain": "We built a simple web server using Java. The web server simply responds to HTTP requests to load HTML, CSS and JavaScript assets for different web pages.All the data is preloaded from the disk to the application\u2019s memory. We plan to run a single instance of our web server on an 8 core computer. All the requests are served by a pool of threads.Which is the best number of threads in the thread pool for highest throughout?", "related_lectures": []}, {"_class": "assessment", "id": 31383356, "assessment_type": "multiple-choice", "prompt": {"feedbacks": ["", "", ""], "relatedLectureIds": "", "answers": ["<p>Option 1 is more efficient </p>", "<p>Option 2 is more efficient </p>", "<p>Both options are equally efficient in a steady state (after the initial JVM warm up time has passed)</p>"], "question": "<p>We built a simple web server using Java. The web server simply responds to HTTP requests to load HTML, CSS and JavaScript assets for different web pages. Different requests can benefit from shared data.</p><p>We plan to run our code on an <strong>8 core computer</strong>.</p><p>We are considering 2 options:</p><p>1) Running 8 instances of a single threaded web server.</p><p>2) Running 1 instance of a multithreaded web server, where all requests are served by a pool of 8 threads.</p><p>Which option is more efficient under high traffic (many requests per second) and has a higher potential for better performance?</p>", "explanation": "<p>Multiple threads in a single process share many resources that belong to the process itself. <br>Data in the CPU caches is shared among threads of the same process (and CPU caches are small in size so that is significant). Context switches among threads of a process are less expensive than between threads from different processes. All of that makes option 2 more efficient.</p>"}, "correct_response": ["b"], "section": "", "question_plain": "We built a simple web server using Java. The web server simply responds to HTTP requests to load HTML, CSS and JavaScript assets for different web pages. Different requests can benefit from shared data.We plan to run our code on an 8 core computer.We are considering 2 options:1) Running 8 instances of a single threaded web server.2) Running 1 instance of a multithreaded web server, where all requests are served by a pool of 8 threads.Which option is more efficient under high traffic (many requests per second) and has a higher potential for better performance?", "related_lectures": []}]};
+    var correct = 0;
+    var total = 0;
+    const questionData = quizData.questions
+    const passPercent = quizData.pass_percent
+    function kiemTraDapAn(correctMuti, choise) {
+      // Chuyển đổi các số trong choise thành chữ cái tương ứng
+      const choiseLetters = choise.map(num => String.fromCharCode(parseInt(num) + 'a'.charCodeAt(0)));
+      console.log('choiseLetters',choiseLetters)
+      // Kiểm tra điều kiện:
+      // 1. Chiều dài hai mảng phải bằng nhau
+      // 2. Tất cả các phần tử trong choiseLetters phải có trong correctMuti
+      if (
+        choiseLetters.length === correctMuti.length &&
+        choiseLetters.every(c => correctMuti.includes(c))
+      ) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+    function main() {
+      total = questionData.length;
+
+      var questions = [];
+      for (var i = 0; i < questionData.length; i++) {
+        var question = questionData[i];
+        var questionText = question.prompt.question;
+        var answers = question.prompt.answers;
+        var correctAnswer = question.correct_response[0];
+        var correctMuti = question.correct_response;
+        var correctAnswerText = answers[correctAnswer.charCodeAt(0) - 97];
+        var questionObj = {
+          question: questionText,
+          correctAnswer: correctAnswerText,
+          answers: answers,
+          id: question.id,
+          explanation: question.prompt.explanation,
+          correctMuti
+
+        };
+        questions.push(questionObj);
+      }
+      console.log(questions.filter(i => i.correctMuti.length > 1))
+
+      updateScore();
+
+      // display the questions
+      var questionsContainer = document.getElementById("quiz-container");
+      for (var i = 0; i < questions.length; i++) {
+        var question = questions[i];
+        var questionElement = document.createElement("form");
+        questionElement.className = "question";
+        questionElement.innerHTML =
+          "<span>Question " +
+          (i + 1) +
+          ":</span>" +
+          '<div class="question-prompt">' +
+          question.question +
+          "</div>";
+        questionElement.id = question.id;
+        questionElement.classList.add("quiz-container");
+        var answersElement = document.createElement("ul");
+        answersElement.className = "answers";
+        console.log('question.correctMuti', question.correctMuti.length)
+        if (question.correctMuti.length > 1) {
+          for (var j = 0; j < question.answers.length; j++) {
+            var answer = question.answers[j];
+            var answerElement = document.createElement("li");
+            answerElement.className = "answer";
+            answerElement.innerHTML =
+              '<label for="input-' +
+              question.id +
+              "-" +
+              j +
+              '"><div onclick="select2(' +
+              question.id +
+              ", " +
+              j +
+              ')"><input id="input-' +
+              question.id +
+              "-" +
+              j +
+              '" type="checkbox" name="question' +
+              i +
+              '" value="' +
+              j +
+              '">' +
+              answer +
+              "</input></div></label>";
+            answerElement.classList.add("question-answer");
+            answersElement.appendChild(answerElement);
+          }
+        } else {
+          for (var j = 0; j < question.answers.length; j++) {
+            var answer = question.answers[j];
+            var answerElement = document.createElement("li");
+            answerElement.className = "answer";
+            answerElement.innerHTML =
+              '<label for="input-' +
+              question.id +
+              "-" +
+              j +
+              '"><div onclick="select(' +
+              question.id +
+              ", " +
+              j +
+              ')"><span></span><input id="input-' +
+              question.id +
+              "-" +
+              j +
+              '" type="radio" name="question' +
+              i +
+              '" value="' +
+              j +
+              '">' +
+              answer +
+              "</input></div></label>";
+            answerElement.classList.add("question-answer");
+            answersElement.appendChild(answerElement);
+          }
+        }
+        questionElement.appendChild(answersElement);
+
+        // add a submit button
+        var submitButton = document.createElement("button");
+        submitButton.className = "submit";
+        submitButton.innerHTML = "Submit";
+        submitButton.classList.add("submit-button");
+
+        submitButton.addEventListener("click", function (e) {
+          e.preventDefault();
+          var questionElement = e.target.parentElement;
+          var questionId = questionElement.id;
+          var question = questions.filter(function (q) {
+            return q.id == questionId;
+          })[0];
+
+          // set the border color of all answers to black
+          var answers = questionElement.getElementsByClassName("answer");
+          for (var i = 0; i < answers.length; i++) {
+            console.log(answers[i]);
+            answers[i].children[0].style.borderColor = "#1c1d1f";
+          }
+
+          var answer = questionElement.querySelector(
+            'input[type="radio"]:checked'
+          );
+          var mutilanswer = questionElement.querySelectorAll(
+            'input[type="checkbox"]:checked'
+          );
+          if (answer) {
+            var answerIndex = answer.value;
+            var answerText = question.answers[answerIndex];
+            if (answerText == question.correctAnswer) {
+              answer.parentElement.parentElement.style.borderColor =
+                "limegreen";
+              // alert("Correct!");
+              correct++;
+              updateScore();
+              questionElement.innerHTML += question.explanation
+
+            } else {
+              answer.parentElement.parentElement.style.borderColor = "red";
+              // alert("Incorrect!");
+            }
+          }
+          if (mutilanswer) {
+            var answerIndex = [...mutilanswer].map(a => a.value);
+
+            if (kiemTraDapAn(question.correctMuti, answerIndex)) {
+              [...mutilanswer].map(item => {
+                item.parentElement.parentElement.style.borderColor =
+                "limegreen";
+              })
+              // alert("Correct!");
+              correct++;
+              updateScore();
+              questionElement.innerHTML += question.explanation
+            } else {
+              [...mutilanswer].map(item => {
+                item.parentElement.parentElement.style.borderColor =
+                "red";
+              })
+            }
+            // var answerText = question.answers[answerIndex];
+            // if (answerText == question.correctAnswer) {
+            //   answer.parentElement.parentElement.style.borderColor =
+            //     "limegreen";
+            //   // alert("Correct!");
+            //   correct++;
+            //   updateScore();
+            //   questionElement.innerHTML += question.explanation
+
+            // } else {
+            //   answer.parentElement.parentElement.style.borderColor = "red";
+            //   // alert("Incorrect!");
+            // }
+          }
+          // else {
+          //   alert("Please select an answer.");
+          // }
+
+        });
+
+        // add button
+        questionElement.appendChild(submitButton);
+
+        questionsContainer.appendChild(questionElement);
+      }
+    }
+
+    function select(question, answer) {
+      var questionElement = document.getElementById(question);
+      var answers = questionElement.getElementsByClassName("answer");
+      for (var i = 0; i < answers.length; i++) {
+        var span = answers[i].children[0].children[0].children[0];
+        var input = answers[i].children[0].children[0].children[1];
+        span.classList.remove("selected");
+        input.checked = false;
+      }
+      var span = answers[answer].children[0].children[0].children[0];
+      var input = answers[answer].children[0].children[0].children[1];
+      span.classList.add("selected");
+      input.checked = true;
+    }
+    function select2(question, answer) {
+      var questionElement = document.getElementById(question);
+      var answers = questionElement.getElementsByClassName("answer");
+      // for (var i = 0; i < answers.length; i++) {
+      //   var span = answers[i].children[0].children[0].children[0];
+      //   var input = answers[i].children[0].children[0].children[1];
+      //   if(input.checked){
+      //     span.classList.remove("selected");
+      //     input.checked = false;
+      //   }
+
+      // }
+      // var span = answers[answer].children[0].children[0].children[0];
+      // var input = answers[answer].children[0].children[0].children[1];
+      // span.classList.add("selected");
+      // input.checked = true;
+    }
+    function updateScore() {
+      var scoreElem = document.getElementById("score");
+      const score = (correct / total) * 100;
+      scoreElem.innerHTML = "Score: " + score + "/" + passPercent + "%";
+    }
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quiz</title>
+
+  <style>
+    body {
+      font-family: sf pro text, -apple-system, BlinkMacSystemFont, Roboto,
+        segoe ui, Helvetica, Arial, sans-serif, apple color emoji,
+        segoe ui emoji, segoe ui symbol;
+      font-weight: 400;
+      line-height: 22.4px;
+      font-size: 16px;
+    }
+
+    p,
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    ul,
+    ol {
+      font-size: 16px;
+      font-weight: 400;
+    }
+
+    ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      max-width: none;
+    }
+
+    code {
+      background-color: #fff;
+      border: 1px solid #d1d7dc;
+      color: #b4690e;
+      font-size: 90%;
+      padding: 0.2rem 0.4rem;
+    }
+
+    .quiz-content {
+      padding: 2.4rem;
+      word-break: break-word;
+      max-width: 86rem;
+      margin: 0 auto;
+    }
+
+    .quiz-container {
+      margin: 0 auto;
+      max-width: 84rem;
+      padding: 0;
+    }
+
+    .question {
+      margin-bottom: 5rem;
+    }
+
+    .question span {
+      font-size: 24px;
+      font-weight: 700;
+    }
+
+    .question-prompt {
+      margin-top: 0.8rem;
+      font-weight: 700;
+    }
+
+    .question-answer {
+      margin-top: 1.6rem;
+      padding-left: 0;
+      box-sizing: border-box;
+    }
+
+    .question-answer label {
+      max-width: 80rem;
+      position: relative;
+      cursor: pointer;
+      display: flex;
+      min-width: 18rem;
+      border: solid #1c1d1f 2px;
+    }
+
+    .question-answer div {
+      padding: 0.5rem;
+      width: 100%;
+    }
+
+    .question-answer div:hover {
+      background-color: #f5f5f5;
+    }
+
+    /* .question-answer input {
+      display: none;
+    } */
+
+    .question-answer span {
+      width: 1rem;
+      height: 1rem;
+      margin-right: 1.6rem;
+      top: 0;
+      border-radius: 50%;
+      display: inline-block;
+      flex-shrink: 0;
+      border: 0.2rem solid #1c1d1f;
+      position: relative;
+    }
+
+    .selected {
+      background: #1c1d1f;
+      box-shadow: 0 0 0 0.4rem #fff inset;
+    }
+
+    .score {
+      position: fixed;
+      background-color: #b4690e;
+      padding: 10px;
+      color: white;
+    }
+  </style>
+</head>
+
+<body onload="main()">
+  <div id="score" class="score">
+    <span>Score: N/A of N/A</span>
+  </div>
+  <div id="quiz-container" class="quiz-content"></div>
+
+  <script>
+    const quizData = {"pass_percent": 70, "questions": [{"_class": "assessment", "id": 81634206, "assessment_type": "multiple-choice", "prompt": {"answers": ["<p>True</p>", "<p>False</p>"], "feedbacks": ["", ""], "explanation": "<p>Each process has at least one thread called the main thread.</p>", "question": "<p><strong>True</strong> or <strong>false</strong>:</p><p>Each process has <strong>at least</strong> one thread.</p>", "relatedLectureIds": ""}, "correct_response": ["a"], "section": "", "question_plain": "True or false:Each process has at least one thread.", "related_lectures": []}, {"_class": "assessment", "id": 81634208, "assessment_type": "multiple-choice", "prompt": {"answers": ["<p>0</p>", "<p>1</p>", "<p>4</p>"], "feedbacks": ["", "", ""], "explanation": "<p>Each thread has its own <strong>stack</strong> region.</p>", "question": "<p>We have a process with 4 threads. How many <strong>stack</strong> memory regions does the process have?</p>", "relatedLectureIds": ""}, "correct_response": ["c"], "section": "", "question_plain": "We have a process with 4 threads. How many stack memory regions does the process have?", "related_lectures": []}, {"_class": "assessment", "id": 81634210, "assessment_type": "multiple-choice", "prompt": {"answers": ["<p><strong>Thread A</strong> and <strong>Thread D</strong> share a <strong>heap</strong></p>", "<p><strong>Thread A</strong> and <strong>Thread D</strong> share a <strong>stack</strong></p>", "<p><strong>Thread A</strong> and <strong>Thread D</strong> share the <strong>file system</strong></p>"], "feedbacks": ["", "", ""], "explanation": "<p>Threads from different processes share only the file system.</p>", "question": "<p>We have 2 processes running:</p><p>Process 1 has 2 threads: <strong><em>Thread A</em></strong> and <strong><em>Thread B</em></strong>.</p><p>Process 2 has 3 threads: <strong><em>Thread C</em></strong>, <strong><em>Thread D</em></strong>, and <strong><em>Thread E</em></strong>.</p><p>Select the correct answer:</p>", "relatedLectureIds": ""}, "correct_response": ["c"], "section": "", "question_plain": "We have 2 processes running:Process 1 has 2 threads: Thread A and Thread B.Process 2 has 3 threads: Thread C, Thread D, and Thread E.Select the correct answer:", "related_lectures": []}, {"_class": "assessment", "id": 81634212, "assessment_type": "multiple-choice", "prompt": {"answers": ["<p><strong><em>Thread A</em></strong> and <strong><em>Thread B</em></strong> share a <strong>heap</strong>.<br><strong><em>Thread C</em></strong> and <strong><em>Thread E</em></strong> share a <strong>stack</strong>.</p>", "<p><strong><em>Thread A</em></strong> and <strong><em>Thread B</em></strong> share a <strong>heap</strong>.<br><strong><em>Thread C</em></strong> and <strong><em>Thread E</em></strong> share a <strong>heap</strong>.</p>", "<p><strong><em>Thread A</em></strong> and <strong>Thread B</strong> share a <strong>stack</strong>.<br><strong><em>Thread C</em></strong> and <strong><em>Thread E</em></strong> share a <strong>heap</strong>.</p>", "<p><strong><em>Thread A</em></strong> and <strong><em>Thread D</em></strong> share a <strong>heap</strong>.<br><strong><em>Thread B</em></strong> and <strong><em>Thread E</em></strong> share a <strong>heap</strong>.</p>"], "feedbacks": ["", "", "", ""], "explanation": "<p>Only threads from the same process share a heap.</p>", "question": "<p>We have 2 processes running:</p><p>Process 1 has 2 threads: <strong><em>Thread A</em></strong> and <strong><em>Thread B</em></strong>.</p><p>Process 2 has 3 threads: <strong><em>Thread C</em></strong>, <strong><em>Thread D</em></strong>, and <strong><em>Thread E</em></strong>.</p><p>Select the correct answer:</p>", "relatedLectureIds": ""}, "correct_response": ["b"], "section": "", "question_plain": "We have 2 processes running:Process 1 has 2 threads: Thread A and Thread B.Process 2 has 3 threads: Thread C, Thread D, and Thread E.Select the correct answer:", "related_lectures": []}, {"_class": "assessment", "id": 81634214, "assessment_type": "multiple-choice", "prompt": {"question": "<p>We have a process with 2 threads.</p><p><strong><em>Thread A</em></strong> <strong>sleeps 90%</strong> of the time, and <strong>10% </strong>of the time it performs operations like responding to keyboard and mouse events. </p><p><strong><em>Thread B</em></strong> <strong>sleeps 10%</strong> of the time, <strong>90%</strong> of the time it performs heavy computations like matrix multiplications.</p><p>Select the correct statement:</p>", "relatedLectureIds": "", "feedbacks": ["", "", "", ""], "explanation": "<p>Thread A spends most of its time sleeping and only a small portion of its time performing operations like responding to keyboard and mouse events. </p><p>This indicates that Thread A is IO bound, as it is waiting for input/output operations to complete. Thread B spends most of its time performing heavy computations like matrix multiplications. </p><p>This indicates that Thread B is CPU bound, as it is utilizing the CPU for its computations.&nbsp; </p><p>By default, the operating system prioritizes IO-bound threads to provide high responsiveness. </p><p><br></p>", "answers": ["<p><strong>Thread A</strong>&nbsp;is IO bound and therefore gets lower priority from the OS by default.</p><p><strong>Thread B</strong> is CPU bound and therefore gets higher priority from the OS by default.</p>", "<p><strong>Thread A</strong>&nbsp;is IO bound and therefore gets higher priority from the OS by default.</p><p><strong>Thread B</strong> is CPU bound and therefore gets lower priority from the OS by default.</p>", "<p><strong>Thread A</strong>&nbsp;is CPU bound and therefore gets lower priority from the OS by default.</p><p><strong>Thread B</strong> is IO bound and therefore gets higher priority from the OS by default.</p>", "<p><strong>Thread A</strong>&nbsp;is CPU bound and therefore gets higher priority from the OS by default.</p><p><strong>Thread B</strong> is IO bound and therefore gets lower priority from the OS by default.</p>"]}, "correct_response": ["b"], "section": "", "question_plain": "We have a process with 2 threads.Thread A sleeps 90% of the time, and 10% of the time it performs operations like responding to keyboard and mouse events. Thread B sleeps 10% of the time, 90% of the time it performs heavy computations like matrix multiplications.Select the correct statement:", "related_lectures": []}, {"_class": "assessment", "id": 81634216, "assessment_type": "multi-select", "prompt": {"question": "<p>What do threads share within the process?</p><p>Select all that apply:</p>", "relatedLectureIds": [], "links": [], "feedbacks": ["", "", "", "", "", "", "", ""], "answers": ["<p>Stack</p>", "<p>Heap</p>", "<p>Static variables</p>", "<p>Instruction pointer</p>", "<p>Process ID</p>", "<p>File System</p>", "<p>Local variables inside a method</p>", "<p>Application code</p>"]}, "correct_response": ["b", "c", "e", "f", "h"], "section": "", "question_plain": "What do threads share within the process?Select all that apply:", "related_lectures": []}, {"_class": "assessment", "id": 81634218, "assessment_type": "multiple-choice", "prompt": {"answers": ["<p>When a thread exits a <code>while</code> loop.</p>", "<p>When the operating system stops the execution of a thread on the CPU and schedules another thread to run on the CPU instead. During this process, the state of the preempted thread is stored in memory so it can be resumed later.</p>", "<p>A context switch is when the operating system stops a kernel thread and resumes a user thread.</p>"], "feedbacks": ["", "", ""], "question": "<p>What is a <strong><em>context switch</em></strong>?</p>", "relatedLectureIds": ""}, "correct_response": ["b"], "section": "", "question_plain": "What is a context switch?", "related_lectures": []}, {"_class": "assessment", "id": 81634220, "assessment_type": "multi-select", "prompt": {"answers": ["<p><code>Thread.sleep(2000);</code> </p>", "<p><code>System.out.println(\"sleep\");</code> </p>", "<p><code>this.wait();</code> </p>", "<p><code>Thread.yield();</code> </p>", "<p><code>synchronized(this) {...}</code> </p>", "<p><code>LockSupport.parkNanos(1000000);</code> </p>"], "feedbacks": ["", "", "", "", "", ""], "explanation": "<p>For more information on Thread.yield() see <a href=\"https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Thread.html#yield()\">https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Thread.html#yield()</a></p><p><br></p><p>For more information on LockSupport.parkNanos(long) see <a href=\"https://docs.oracle.com/javase/7/docs/api/java/util/concurrent/locks/LockSupport.html#parkNanos(long)\">https://docs.oracle.com/javase/7/docs/api/java/util/concurrent/locks/LockSupport.html#parkNanos(long)</a></p>", "question": "<p>Which line of code will <strong>always</strong> trigger the thread to stop executing on the CPU and cause the operating system to perform a <strong><em>context switch</em></strong>?</p>", "relatedLectureIds": ""}, "correct_response": ["a", "c", "f"], "section": "", "question_plain": "Which line of code will always trigger the thread to stop executing on the CPU and cause the operating system to perform a context switch?", "related_lectures": []}, {"_class": "assessment", "id": 81634222, "assessment_type": "multi-select", "prompt": {"answers": ["<p><code>Thread.sleep(2000);</code> </p>", "<p><code>this.wait();</code> </p>", "<p><code>this.notifyAll();</code> </p>", "<p><code>Thread.yield();</code> </p>", "<p><code>synchronized(this) {...}</code> </p>", "<p><code>lockObject.lock();</code> </p>", "<p><code>lockObject.unlock();</code> </p>", "<p><code>thread.interrupt();</code> </p>", "<p><code>thread.join();</code> </p>", "<p><code>System.out.println(\"hello\");</code> </p>"], "feedbacks": ["", "", "", "", "", "", "", "", "", ""], "explanation": "<p><code>synchronized(this) {...}</code>&nbsp; and <code>lockObject.lock();</code> will be blocking calls only when the monitor/lock is already acquired by another thread.</p><p>For more information on <code>Thread.yield()</code> see <a href=\"https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Thread.html#yield()\">https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Thread.html#yield()</a></p>", "question": "<p>Which of the following is a blocking call? (or a potentially blocking call) </p>", "relatedLectureIds": ""}, "correct_response": ["a", "b", "e", "f", "i"], "section": "", "question_plain": "Which of the following is a blocking call? (or a potentially blocking call)", "related_lectures": []}, {"_class": "assessment", "id": 81634224, "assessment_type": "multiple-choice", "prompt": {"question": "<p>Consider the following code:</p><pre class=\"prettyprint linenums\">Thread threadA = new Thread( () -&gt; ... );\nthread.setPriority(MAX_PRIORITY);\nthread.start();</pre><p>Which statement is correct?</p>", "relatedLectureIds": "", "feedbacks": ["", "", "", ""], "explanation": "<p>The static priority is the priority we set programmatically for each thread. This static priority serves as a hint for the operating system about the priority of the thread. However, the operating system maintains its own dynamic priority, which keeps changing based on the thread's behavior and how much CPU time it receives compared to other threads. The implementation of this logic depends on the operating system.</p>", "answers": ["<p>threadA's dynamic priority is set to MAX_PRIORITY but the static priority is unknown and is based on the JVM scheduler</p>", "<p>The method</p><pre class=\"prettyprint linenums\">thread.setPriority(MAX_PRIORITY);</pre><p>is ignored by the OS as it maintains its own priority for each thread</p>", "<p>threadA's static priority is set to MAX_PRIORITY but the dynamic priority maintained by the OS is unknown and changes based on the OS scheduler</p>", "<p>threadA's static priority is set to MAX_PRIORITY but the dynamic priority maintained by the OS is unknown and changes based on the JVM scheduler</p>"]}, "correct_response": ["c"], "section": "", "question_plain": "Consider the following code:Thread threadA = new Thread( () -&gt; ... );\nthread.setPriority(MAX_PRIORITY);\nthread.start();Which statement is correct?", "related_lectures": []}, {"_class": "assessment", "id": 81634226, "assessment_type": "multiple-choice", "prompt": {"question": "<p>Consider the following code snippet:</p><pre class=\"prettyprint linenums\">public static void main(String [] args) {\n    Thread thread = new Thread(() -&gt; System.out.println(\"Hello from \" +\n                                                      Thread.currentThread().getName()));\n    thread.setName(\"New Thread\");\n    thread.run();\n\n    Thread.sleep(2000);\n}</pre><p>What will be the output of this program?</p>", "relatedLectureIds": "", "feedbacks": ["", "", ""], "explanation": "<p><code>thread.run()</code> does not start the new thread. Instead, it simply runs the <code>run()</code> method of the <code>Runnable</code> object passed into the <code>Thread</code> constructor. </p><p>In other words, the code inside the run method will run in the main thread as soon as <code>thread.run()</code>&nbsp;is executed, which will result in the <code>Hello from main</code>&nbsp; output</p>", "answers": ["<p><code>Hello from main</code> </p>", "<p><code>Hello from New Thread</code> </p>", "<p><code>Hello from Thread-0</code> </p>"]}, "correct_response": ["a"], "section": "", "question_plain": "Consider the following code snippet:public static void main(String [] args) {\n    Thread thread = new Thread(() -&gt; System.out.println(\"Hello from \" +\n                                                      Thread.currentThread().getName()));\n    thread.setName(\"New Thread\");\n    thread.run();\n\n    Thread.sleep(2000);\n}What will be the output of this program?", "related_lectures": []}, {"_class": "assessment", "id": 81634228, "assessment_type": "multiple-choice", "prompt": {"question": "<p>Consider the following program:</p><pre class=\"prettyprint linenums\">public static void main(String [] args) throws InterruptedException {\n    Thread thread = new Thread(new Runnable() {\n        @Override\n        public void run() {\n            try {\n                Thread.sleep(3000);\n            } catch (InterruptedException e) {\n                e.printStackTrace();\n            }\n            System.out.println(\"Hello from \" + Thread.currentThread().getName());\n        }\n    });\n    thread.setName(\"Background thread\");\n    thread.start();\n\n    Thread.sleep(1000);\n    System.out.println(\"Hello from \" + Thread.currentThread().getName());\n}</pre><p>What is going to be the output of the program?</p>", "relatedLectureIds": "", "feedbacks": ["", "", "", ""], "explanation": "<p>After the main thread starts, the background thread it goes to sleep for 1 second. However, the background thread sleeps for much longer (3 seconds) after it was created. This results in the main thread's print statement being printed out first. Only after the background thread prints out its statement the program terminates.</p>", "answers": ["<pre class=\"prettyprint linenums\">Hello from Background thread\nHello from main</pre>", "<pre class=\"prettyprint linenums\">Hello from main\nHello from Background thread</pre>", "<p><code>Hello from main</code> </p>", "<p><code>Hello from Background thread</code> </p>"]}, "correct_response": ["b"], "section": "", "question_plain": "Consider the following program:public static void main(String [] args) throws InterruptedException {\n    Thread thread = new Thread(new Runnable() {\n        @Override\n        public void run() {\n            try {\n                Thread.sleep(3000);\n            } catch (InterruptedException e) {\n                e.printStackTrace();\n            }\n            System.out.println(\"Hello from \" + Thread.currentThread().getName());\n        }\n    });\n    thread.setName(\"Background thread\");\n    thread.start();\n\n    Thread.sleep(1000);\n    System.out.println(\"Hello from \" + Thread.currentThread().getName());\n}What is going to be the output of the program?", "related_lectures": []}, {"_class": "assessment", "id": 81634230, "assessment_type": "multiple-choice", "prompt": {"answers": ["<p><code>Hello from main</code> </p>", "<pre class=\"prettyprint linenums\">Hello from main\nHello from Background thread</pre>", "<p><code>Hello from Background thread</code> </p>", "<pre class=\"prettyprint linenums\">Hello from Background thread\nHello from main</pre>"], "feedbacks": ["", "", "", ""], "explanation": "<p>The background thread is a daemon thread, so the program will terminate before <code>Hello from Background thread</code> is printed.</p>", "question": "<p>Consider the following program:</p><pre class=\"prettyprint linenums\">    public static void main(String [] args) throws InterruptedException {\n        Thread thread = new Thread(new Runnable() {\n            @Override\n            public void run() {\n                try {\n                    Thread.sleep(3000);\n                } catch (InterruptedException e) {\n                    e.printStackTrace();\n                }\n                System.out.println(\"Hello from \" + Thread.currentThread().getName());\n            }\n        });\n        thread.setName(\"Background thread\");\n\n        thread.setDaemon(true);\n        \n        thread.start();\n\n        Thread.sleep(2000);\n        System.out.println(\"Hello from \" + Thread.currentThread().getName());\n    }</pre><p>What will be the output of this program?</p>", "relatedLectureIds": ""}, "correct_response": ["a"], "section": "", "question_plain": "Consider the following program:    public static void main(String [] args) throws InterruptedException {\n        Thread thread = new Thread(new Runnable() {\n            @Override\n            public void run() {\n                try {\n                    Thread.sleep(3000);\n                } catch (InterruptedException e) {\n                    e.printStackTrace();\n                }\n                System.out.println(\"Hello from \" + Thread.currentThread().getName());\n            }\n        });\n        thread.setName(\"Background thread\");\n\n        thread.setDaemon(true);\n        \n        thread.start();\n\n        Thread.sleep(2000);\n        System.out.println(\"Hello from \" + Thread.currentThread().getName());\n    }What will be the output of this program?", "related_lectures": []}, {"_class": "assessment", "id": 81634232, "assessment_type": "multi-select", "prompt": {"answers": ["<pre class=\"prettyprint linenums\">thread 2 Step A\nmain Step A\nthread 1 Step A\nthread 2 Step B\nthread 1 Step B</pre>", "<pre class=\"prettyprint linenums\">thread 2 Step A\nthread 1 Step B\nmain Step A\nthread 1 Step A\nthread 2 Step B</pre>", "<pre class=\"prettyprint linenums\">thread 1 Step A\nthread 2 Step A\nmain Step A\nthread 2 Step B\nthread 1 Step B</pre>", "<pre class=\"prettyprint linenums\">main Step A\nthread 2 Step A\nthread 1 Step A\nthread 2 Step B\nthread 1 Step B</pre>", "<pre class=\"prettyprint linenums\">thread 2 Step A\nmain Step A\nthread 2 Step B\nthread 1 Step B\nthread 1 Step A</pre>", "<pre class=\"prettyprint linenums\">main Step A\nthread 2 Step A\nthread 1 Step A\nthread 1 Step B\nthread 2 Step B</pre>", "<pre class=\"prettyprint linenums\">main Step A\nthread 1 Step A\nthread 2 Step B\nthread 1 Step B\nthread 2 Step A</pre>", "<pre class=\"prettyprint linenums\">thread 2 Step A\nthread 1 Step A\nthread 1 Step B\nthread 2 Step B\nmain Step A</pre>"], "feedbacks": ["", "", "", "", "", "", "", ""], "explanation": "<p>The order of scheduling of the three threads is nondeterministic and depends on the OS. However, the code in each thread is executed sequentially.</p>", "question": "<p>Consider the following program:</p><pre class=\"prettyprint linenums\">public static void main(String [] args) throws InterruptedException {\n\n    Runnable task = new Runnable() {\n        @Override\n        public void run() {\n            System.out.println(Thread.currentThread().getName() + \" Step A\");\n            System.out.println(Thread.currentThread().getName() + \" Step B\");\n        }\n    };\n    Thread thread1 = new Thread(task);\n    Thread thread2 = new Thread(task);\n\n    thread1.setName(\"thread 1\");\n    thread2.setName(\"thread 2\");\n    thread1.start();\n    thread2.start();\n\n    System.out.println(Thread.currentThread().getName() + \" Step A\");\n}</pre><p>Choose all the possible outputs of this program:</p>", "relatedLectureIds": ""}, "correct_response": ["a", "c", "d", "f", "h"], "section": "", "question_plain": "Consider the following program:public static void main(String [] args) throws InterruptedException {\n\n    Runnable task = new Runnable() {\n        @Override\n        public void run() {\n            System.out.println(Thread.currentThread().getName() + \" Step A\");\n            System.out.println(Thread.currentThread().getName() + \" Step B\");\n        }\n    };\n    Thread thread1 = new Thread(task);\n    Thread thread2 = new Thread(task);\n\n    thread1.setName(\"thread 1\");\n    thread2.setName(\"thread 2\");\n    thread1.start();\n    thread2.start();\n\n    System.out.println(Thread.currentThread().getName() + \" Step A\");\n}Choose all the possible outputs of this program:", "related_lectures": []}, {"_class": "assessment", "id": 81634234, "assessment_type": "multiple-choice", "prompt": {"question": "<p>What will be the output of the following code snippet?</p><pre class=\"prettyprint linenums\">Thread thread = new Thread(() -&gt; System.out.println(\"Hello from the other side\");\nSystem.out.println(thread.getState());\nthread.start();</pre>", "relatedLectureIds": "", "feedbacks": ["", "", "", "", "", ""], "explanation": "<p>Each thread gets into the <code>NEW</code> state as soon as it is created but before it is started.</p><p>For additional info see: <a href=\"https://docs.oracle.com/javase/7/docs/api/java/lang/Thread.State.html\">https://docs.oracle.com/javase/7/docs/api/java/lang/Thread.State.html</a></p>", "answers": ["<pre class=\"prettyprint linenums\">NEW\nHello from the other side</pre>", "<pre class=\"prettyprint linenums\">RUNNABLE\nHello from the other side</pre>", "<pre class=\"prettyprint linenums\">BLOCKED\nHello from the other side</pre>", "<pre class=\"prettyprint linenums\">Hello from the other side\nNEW</pre>", "<pre class=\"prettyprint linenums\">Hello from the other side\nRUNNABLE</pre>", "<pre class=\"prettyprint linenums\">Hello from the other side\nBLOCKED</pre>"]}, "correct_response": ["a"], "section": "", "question_plain": "What will be the output of the following code snippet?Thread thread = new Thread(() -&gt; System.out.println(\"Hello from the other side\");\nSystem.out.println(thread.getState());\nthread.start();", "related_lectures": []}, {"_class": "assessment", "id": 81634236, "assessment_type": "multiple-choice", "prompt": {"answers": ["<p><code>NEW</code></p>", "<p><code>RUNNABLE</code></p>", "<p><code>BLOCKED</code></p>", "<p><code>WAITING</code></p>", "<p><code>TIMED_WAITING</code></p>", "<p><code>TERMINATED</code></p>"], "feedbacks": ["", "", "", "", "", ""], "explanation": "<p>Only threads in the <code>RUNNABLE</code> state are considered by the Operating System to be run on this CPU.</p><p>For more details <a href=\"https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Thread.State.html#RUNNABLE\">see</a></p>", "question": "<p>What state does a thread need to be in for the Operating System to schedule it to run on the CPU? </p>", "relatedLectureIds": ""}, "correct_response": ["b"], "section": "", "question_plain": "What state does a thread need to be in for the Operating System to schedule it to run on the CPU?", "related_lectures": []}, {"_class": "assessment", "id": 81634238, "assessment_type": "multiple-choice", "prompt": {"question": "<p>Consider the following code:</p><pre class=\"prettyprint linenums\">public static void main(String [] args) throws InterruptedException {\n    final SharedResource sharedResource = new SharedResource();\n\n    Thread thread1 = new Thread(new Runnable() {\n        @Override\n        public void run() {\n            sharedResource.updateResource();\n        }\n    });\n\n    Thread thread2 = new Thread(new Runnable() {\n        @Override\n        public void run() {\n            System.out.println(\"trying to update shared resource\");\n            sharedResource.updateResource();\n        }\n    });\n    \n    thread1.setDaemon(true);\n\n    thread1.start();\n    Thread.sleep(1000); // 1 second\n    \n    thread2.setDaemon(false);\n    thread2.start();\n}\n\npublic static class SharedResource {\n    \n    public synchronized void updateResource() {\n        try {\n            Thread.sleep(10000); // 10 seconds\n        } catch (InterruptedException e) {\n            e.printStackTrace();\n        }\n    }\n}</pre><p>In which state will <code>thread2</code> be, after it prints <code>\"trying to update shared resource\"</code> and calls <code>sharedResource.updateResource();</code> </p>", "relatedLectureIds": "", "feedbacks": ["", "", "", "", "", ""], "explanation": "<p><code>Thread2</code> will be <em>blocked</em> on the monitor of the <code>sharedResource</code> object and therefore be in the <a href=\"https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Thread.State.html#BLOCKED\">BLOCKED</a> state. And since it's set to no be a daemon thread, it will hold the application running until it acquires the monitor and terminates.</p>", "answers": ["<p><code>NEW</code></p>", "<p><code>RUNNABLE</code></p>", "<p><code>BLOCKED</code></p>", "<p><code>WAITING</code></p>", "<p><code>TIMED_WAITING</code></p>", "<p><code>TERMINATED</code></p>"]}, "correct_response": ["c"], "section": "", "question_plain": "Consider the following code:public static void main(String [] args) throws InterruptedException {\n    final SharedResource sharedResource = new SharedResource();\n\n    Thread thread1 = new Thread(new Runnable() {\n        @Override\n        public void run() {\n            sharedResource.updateResource();\n        }\n    });\n\n    Thread thread2 = new Thread(new Runnable() {\n        @Override\n        public void run() {\n            System.out.println(\"trying to update shared resource\");\n            sharedResource.updateResource();\n        }\n    });\n    \n    thread1.setDaemon(true);\n\n    thread1.start();\n    Thread.sleep(1000); // 1 second\n    \n    thread2.setDaemon(false);\n    thread2.start();\n}\n\npublic static class SharedResource {\n    \n    public synchronized void updateResource() {\n        try {\n            Thread.sleep(10000); // 10 seconds\n        } catch (InterruptedException e) {\n            e.printStackTrace();\n        }\n    }\n}In which state will thread2 be, after it prints \"trying to update shared resource\" and calls sharedResource.updateResource();", "related_lectures": []}, {"_class": "assessment", "id": 81634240, "assessment_type": "multiple-choice", "prompt": {"question": "<p>Consider the following code snippet:</p><pre class=\"prettyprint linenums\">Thread thread = new Thread(new Runnable() {\n    @Override\n    public void run() {\n        System.out.println(\"thread is running\");\n        \n        try {\n            Thread.sleep(10000); // 10 seconds\n        } catch (InterruptedException e) {\n            e.printStackTrace();\n        }\n    }\n});\nthread.setName(\"Thread1\");\nthread.setDaemon(false);\nthread.start();</pre><p>What state will <strong><em>Thread1</em></strong>&nbsp; be in 2 seconds after running this code?</p>", "relatedLectureIds": [], "links": [], "feedbacks": ["", "", "", "", "", ""], "explanation": "<p>After Thread 1 is scheduled to run by the OS, it will execute the <code>Thread.sleep(..)</code> and will stay there for 10 seconds. When a thread is sleeping, it goes into <code>TIMED_WAITING</code>&nbsp;state.</p><p>For more information on thread states see: <a href=\"https://docs.oracle.com/javase/7/docs/api/java/lang/Thread.State.html\">https://docs.oracle.com/javase/7/docs/api/java/lang/Thread.State.html</a></p>", "answers": ["<p><code>NEW</code></p>", "<p><code>RUNNABLE</code></p>", "<p><code>BLOCKED</code></p>", "<p><code>WAITING</code></p>", "<p><code>TIMED_WAITING</code></p>", "<p><code>TERMINATED</code></p>"]}, "correct_response": ["e"], "section": "", "question_plain": "Consider the following code snippet:Thread thread = new Thread(new Runnable() {\n    @Override\n    public void run() {\n        System.out.println(\"thread is running\");\n        \n        try {\n            Thread.sleep(10000); // 10 seconds\n        } catch (InterruptedException e) {\n            e.printStackTrace();\n        }\n    }\n});\nthread.setName(\"Thread1\");\nthread.setDaemon(false);\nthread.start();What state will Thread1&nbsp; be in 2 seconds after running this code?", "related_lectures": []}, {"_class": "assessment", "id": 81634242, "assessment_type": "multiple-choice", "prompt": {"answers": ["<pre class=\"prettyprint linenums\">thread1 is doing work\nthread1 is now in the NEW state</pre>", "<pre class=\"prettyprint linenums\">thread1 is doing work\nthread1 is now in the TERMINATED state</pre>", "<pre class=\"prettyprint linenums\">thread1 is doing work\nthread1 is now in the BLOCKED state</pre>", "<pre class=\"prettyprint linenums\">thread1 is doing work</pre>"], "feedbacks": ["", "", "", ""], "explanation": "<p>5 seconds after we start the Thread1, Thread1 will definitely finish its work and go into a TERMINATED state, which is the last state any thread goes to after it finishes its execution.</p><p>For more information see <a href=\"https://docs.oracle.com/javase/7/docs/api/java/lang/Thread.State.html\">https://docs.oracle.com/javase/7/docs/api/java/lang/Thread.State.html</a></p>", "question": "<p>Consider the following program:</p><pre class=\"prettyprint linenums\">public static void main(String [] args) throws InterruptedException {\n    Thread thread = new Thread(() -&gt; System.out.println(Thread.currentThread().getName() + \" is doing work\"));\n\n    thread.setName(\"thread1\");\n\n    thread.start();\n    Thread.sleep(5000);\n\n    System.out.println(thread.getName() + \" is now in the \" + thread.getState() + \" state\");\n}</pre><p>What will be the output after the completion of the program?</p>", "relatedLectureIds": ""}, "correct_response": ["b"], "section": "", "question_plain": "Consider the following program:public static void main(String [] args) throws InterruptedException {\n    Thread thread = new Thread(() -&gt; System.out.println(Thread.currentThread().getName() + \" is doing work\"));\n\n    thread.setName(\"thread1\");\n\n    thread.start();\n    Thread.sleep(5000);\n\n    System.out.println(thread.getName() + \" is now in the \" + thread.getState() + \" state\");\n}What will be the output after the completion of the program?", "related_lectures": []}, {"_class": "assessment", "id": 81634244, "assessment_type": "multiple-choice", "prompt": {"answers": ["<p>The <code>start()</code> method.</p>", "<p>The <code>run()</code>&nbsp;method.</p>", "<p>The constructor.</p>", "<p>All of the above</p>"], "feedbacks": ["", "", "", ""], "explanation": "<p>The <code>run()</code> method of the <code>Runnable</code> interface, which is implemented by the <code>Thread</code> class, is the method we need to override. This method contains the code which will be executed by the newly created thread.</p>", "question": "<p>We want to run a piece of code on a different thread by extending the <code>Thread</code> class. Which method do we need to override?</p>", "relatedLectureIds": ""}, "correct_response": ["b"], "section": "", "question_plain": "We want to run a piece of code on a different thread by extending the Thread class. Which method do we need to override?", "related_lectures": []}, {"_class": "assessment", "id": 81634246, "assessment_type": "multi-select", "prompt": {"answers": ["<p>Memory management</p>", "<p>Isolation between processes</p>", "<p>Schedule processes and their threads on the CPU&nbsp;cores</p>", "<p>Provide security and interface for accessing the hardware</p>"], "feedbacks": ["", "", "", ""], "question": "<p>What are some of the roles of an Operating System?</p>", "relatedLectureIds": ""}, "correct_response": ["a", "b", "c", "d"], "section": "", "question_plain": "What are some of the roles of an Operating System?", "related_lectures": []}, {"_class": "assessment", "id": 81634248, "assessment_type": "multiple-choice", "prompt": {"answers": ["<pre class=\"prettyprint linenums\">Starting thread</pre>", "<pre class=\"prettyprint linenums\">Starting thread\nRunning on thread Custom Thread</pre>", "<pre class=\"prettyprint linenums\">Starting thread\nRunning on thread main</pre>"], "feedbacks": ["", "", ""], "explanation": "<p>When we override the <code>start</code> method we need to call <code>super.start();</code> to make sure Thread's original <code>start()</code> method is called.&nbsp;Otherwise the thread will not be started.</p>", "question": "<p>Consider the following code:</p><pre class=\"prettyprint linenums\">public static void main(String[] args) {\n    Thread customThread = new CustomThread();\n\n    customThread.start();\n    customThread.setName(\"Custom Thread\");\n}\n\n\npublic static class CustomThread extends Thread {\n    @Override\n    public void start() {\n        System.out.println(\"Starting thread\");\n    }\n\n    @Override\n    public void run() {\n        System.out.println(\"Running on thread \" + Thread.currentThread().getName());\n    }\n }</pre><p>What will be the output of this program?</p>", "relatedLectureIds": ""}, "correct_response": ["a"], "section": "", "question_plain": "Consider the following code:public static void main(String[] args) {\n    Thread customThread = new CustomThread();\n\n    customThread.start();\n    customThread.setName(\"Custom Thread\");\n}\n\n\npublic static class CustomThread extends Thread {\n    @Override\n    public void start() {\n        System.out.println(\"Starting thread\");\n    }\n\n    @Override\n    public void run() {\n        System.out.println(\"Running on thread \" + Thread.currentThread().getName());\n    }\n }What will be the output of this program?", "related_lectures": []}, {"_class": "assessment", "id": 81634250, "assessment_type": "multiple-choice", "prompt": {"answers": ["<p>The JVM deliberately randomly picks a thread to schedule to make things fair</p>", "<p>The OS maintains many threads whose state and priority is constantly changing. In addition, each OS has its own implementation of a thread scheduler.</p>", "<p>The OS engineers make it hard to predict so no one can reverse engineer their algorithm</p>"], "feedbacks": ["", "", ""], "question": "<p>Why is the order of execution of threads unpredictable?</p>", "relatedLectureIds": ""}, "correct_response": ["b"], "section": "", "question_plain": "Why is the order of execution of threads unpredictable?", "related_lectures": []}, {"_class": "assessment", "id": 81634252, "assessment_type": "multi-select", "prompt": {"question": "<p>Which of the following methods will bring the thread into a <code>WAITING</code> state?</p>", "relatedLectureIds": "", "feedbacks": ["", "", "", "", "", "", ""], "explanation": "<p>All the methods that make a thread wait to be signaled and woken up by another thread are in the <code>WAITING</code> state. Notice that if their wait is timed, they go into a <code>TIMED_WAITING</code> state instead.</p><p>For more information see <a href=\"https://docs.oracle.com/javase/7/docs/api/java/lang/Thread.State.html\">https://docs.oracle.com/javase/7/docs/api/java/lang/Thread.State.html</a></p>", "answers": ["<p><code>Thread.sleep(100);</code> </p>", "<p><code>Object.wait();</code> </p>", "<p><code>Object.wait(1000);</code> </p>", "<p><code>LockSupport.park();</code> </p>", "<p><code>Thread.join(5000);</code> </p>", "<p><code>ReenterantLock.lock();</code></p>", "<p><code>Thread.join();</code></p>"]}, "correct_response": ["b", "d", "g"], "section": "", "question_plain": "Which of the following methods will bring the thread into a WAITING state?", "related_lectures": []}, {"_class": "assessment", "id": 81634254, "assessment_type": "multiple-choice", "prompt": {"answers": ["<p>class</p>", "<p>Interface </p>", "<p>Abstract class </p>", "<p>enum</p>", "<p>Annotation </p>"], "feedbacks": ["", "", "", "", ""], "explanation": "<p><code>Runnable</code> is an interface with a single method called <code>run()</code>.</p><p>For more information see <a href=\"https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Runnable.html\">https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Runnable.html</a></p>", "question": "<p><code>Runnable</code> is a...</p>", "relatedLectureIds": ""}, "correct_response": ["b"], "section": "", "question_plain": "Runnable is a...", "related_lectures": []}, {"_class": "assessment", "id": 81634256, "assessment_type": "multiple-choice", "prompt": {"answers": ["<p>class </p>", "<p>Abstract class</p>", "<p>Interface </p>", "<p>Enum</p>", "<p>Annotation </p>"], "feedbacks": ["", "", "", "", ""], "explanation": "<p>For more information see <a href=\"https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Thread.html\">https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Thread.html</a></p>", "question": "<p><code>Thread</code> is a ..</p>", "relatedLectureIds": ""}, "correct_response": ["a"], "section": "", "question_plain": "Thread is a ..", "related_lectures": []}, {"_class": "assessment", "id": 81634258, "assessment_type": "multiple-choice", "prompt": {"answers": ["<p>Yes, it can be restarted by calling the <code>start()</code> method on it again.</p>", "<p>No. It is illegal to start a thread more than once. If a thread has already completed, it cannot be restarted.</p>"], "feedbacks": ["", ""], "explanation": "<p><a href=\"https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Thread.html#start()\">Thread.start() documentation</a></p>", "question": "<p>Can a thread be restarted after it finished its execution?</p>", "relatedLectureIds": ""}, "correct_response": ["b"], "section": "", "question_plain": "Can a thread be restarted after it finished its execution?", "related_lectures": []}]};
+    var correct = 0;
+    var total = 0;
+    const questionData = quizData.questions
+    const passPercent = quizData.pass_percent
+    function kiemTraDapAn(correctMuti, choise) {
+      // Chuyển đổi các số trong choise thành chữ cái tương ứng
+      const choiseLetters = choise.map(num => String.fromCharCode(parseInt(num) + 'a'.charCodeAt(0)));
+      console.log('choiseLetters',choiseLetters)
+      // Kiểm tra điều kiện:
+      // 1. Chiều dài hai mảng phải bằng nhau
+      // 2. Tất cả các phần tử trong choiseLetters phải có trong correctMuti
+      if (
+        choiseLetters.length === correctMuti.length &&
+        choiseLetters.every(c => correctMuti.includes(c))
+      ) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+    function main() {
+      total = questionData.length;
+
+      var questions = [];
+      for (var i = 0; i < questionData.length; i++) {
+        var question = questionData[i];
+        var questionText = question.prompt.question;
+        var answers = question.prompt.answers;
+        var correctAnswer = question.correct_response[0];
+        var correctMuti = question.correct_response;
+        var correctAnswerText = answers[correctAnswer.charCodeAt(0) - 97];
+        var questionObj = {
+          question: questionText,
+          correctAnswer: correctAnswerText,
+          answers: answers,
+          id: question.id,
+          explanation: question.prompt.explanation,
+          correctMuti
+
+        };
+        questions.push(questionObj);
+      }
+      console.log(questions.filter(i => i.correctMuti.length > 1))
+
+      updateScore();
+
+      // display the questions
+      var questionsContainer = document.getElementById("quiz-container");
+      for (var i = 0; i < questions.length; i++) {
+        var question = questions[i];
+        var questionElement = document.createElement("form");
+        questionElement.className = "question";
+        questionElement.innerHTML =
+          "<span>Question " +
+          (i + 1) +
+          ":</span>" +
+          '<div class="question-prompt">' +
+          question.question +
+          "</div>";
+        questionElement.id = question.id;
+        questionElement.classList.add("quiz-container");
+        var answersElement = document.createElement("ul");
+        answersElement.className = "answers";
+        console.log('question.correctMuti', question.correctMuti.length)
+        if (question.correctMuti.length > 1) {
+          for (var j = 0; j < question.answers.length; j++) {
+            var answer = question.answers[j];
+            var answerElement = document.createElement("li");
+            answerElement.className = "answer";
+            answerElement.innerHTML =
+              '<label for="input-' +
+              question.id +
+              "-" +
+              j +
+              '"><div onclick="select2(' +
+              question.id +
+              ", " +
+              j +
+              ')"><input id="input-' +
+              question.id +
+              "-" +
+              j +
+              '" type="checkbox" name="question' +
+              i +
+              '" value="' +
+              j +
+              '">' +
+              answer +
+              "</input></div></label>";
+            answerElement.classList.add("question-answer");
+            answersElement.appendChild(answerElement);
+          }
+        } else {
+          for (var j = 0; j < question.answers.length; j++) {
+            var answer = question.answers[j];
+            var answerElement = document.createElement("li");
+            answerElement.className = "answer";
+            answerElement.innerHTML =
+              '<label for="input-' +
+              question.id +
+              "-" +
+              j +
+              '"><div onclick="select(' +
+              question.id +
+              ", " +
+              j +
+              ')"><span></span><input id="input-' +
+              question.id +
+              "-" +
+              j +
+              '" type="radio" name="question' +
+              i +
+              '" value="' +
+              j +
+              '">' +
+              answer +
+              "</input></div></label>";
+            answerElement.classList.add("question-answer");
+            answersElement.appendChild(answerElement);
+          }
+        }
+        questionElement.appendChild(answersElement);
+
+        // add a submit button
+        var submitButton = document.createElement("button");
+        submitButton.className = "submit";
+        submitButton.innerHTML = "Submit";
+        submitButton.classList.add("submit-button");
+
+        submitButton.addEventListener("click", function (e) {
+          e.preventDefault();
+          var questionElement = e.target.parentElement;
+          var questionId = questionElement.id;
+          var question = questions.filter(function (q) {
+            return q.id == questionId;
+          })[0];
+
+          // set the border color of all answers to black
+          var answers = questionElement.getElementsByClassName("answer");
+          for (var i = 0; i < answers.length; i++) {
+            console.log(answers[i]);
+            answers[i].children[0].style.borderColor = "#1c1d1f";
+          }
+
+          var answer = questionElement.querySelector(
+            'input[type="radio"]:checked'
+          );
+          var mutilanswer = questionElement.querySelectorAll(
+            'input[type="checkbox"]:checked'
+          );
+          if (answer) {
+            var answerIndex = answer.value;
+            var answerText = question.answers[answerIndex];
+            if (answerText == question.correctAnswer) {
+              answer.parentElement.parentElement.style.borderColor =
+                "limegreen";
+              // alert("Correct!");
+              correct++;
+              updateScore();
+              questionElement.innerHTML += question.explanation
+
+            } else {
+              answer.parentElement.parentElement.style.borderColor = "red";
+              // alert("Incorrect!");
+            }
+          }
+          if (mutilanswer) {
+            var answerIndex = [...mutilanswer].map(a => a.value);
+
+            if (kiemTraDapAn(question.correctMuti, answerIndex)) {
+              [...mutilanswer].map(item => {
+                item.parentElement.parentElement.style.borderColor =
+                "limegreen";
+              })
+              // alert("Correct!");
+              correct++;
+              updateScore();
+              questionElement.innerHTML += question.explanation
+            } else {
+              [...mutilanswer].map(item => {
+                item.parentElement.parentElement.style.borderColor =
+                "red";
+              })
+            }
+            // var answerText = question.answers[answerIndex];
+            // if (answerText == question.correctAnswer) {
+            //   answer.parentElement.parentElement.style.borderColor =
+            //     "limegreen";
+            //   // alert("Correct!");
+            //   correct++;
+            //   updateScore();
+            //   questionElement.innerHTML += question.explanation
+
+            // } else {
+            //   answer.parentElement.parentElement.style.borderColor = "red";
+            //   // alert("Incorrect!");
+            // }
+          }
+          // else {
+          //   alert("Please select an answer.");
+          // }
+
+        });
+
+        // add button
+        questionElement.appendChild(submitButton);
+
+        questionsContainer.appendChild(questionElement);
+      }
+    }
+
+    function select(question, answer) {
+      var questionElement = document.getElementById(question);
+      var answers = questionElement.getElementsByClassName("answer");
+      for (var i = 0; i < answers.length; i++) {
+        var span = answers[i].children[0].children[0].children[0];
+        var input = answers[i].children[0].children[0].children[1];
+        span.classList.remove("selected");
+        input.checked = false;
+      }
+      var span = answers[answer].children[0].children[0].children[0];
+      var input = answers[answer].children[0].children[0].children[1];
+      span.classList.add("selected");
+      input.checked = true;
+    }
+    function select2(question, answer) {
+      var questionElement = document.getElementById(question);
+      var answers = questionElement.getElementsByClassName("answer");
+      // for (var i = 0; i < answers.length; i++) {
+      //   var span = answers[i].children[0].children[0].children[0];
+      //   var input = answers[i].children[0].children[0].children[1];
+      //   if(input.checked){
+      //     span.classList.remove("selected");
+      //     input.checked = false;
+      //   }
+
+      // }
+      // var span = answers[answer].children[0].children[0].children[0];
+      // var input = answers[answer].children[0].children[0].children[1];
+      // span.classList.add("selected");
+      // input.checked = true;
+    }
+    function updateScore() {
+      var scoreElem = document.getElementById("score");
+      const score = (correct / total) * 100;
+      scoreElem.innerHTML = "Score: " + score + "/" + passPercent + "%";
+    }
+  </script>
+</body>
+
+</html>
